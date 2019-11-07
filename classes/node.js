@@ -5,6 +5,26 @@ class Node {
   constructor(x, y, type) {
     this.position = createVector(x, y);
     this.type = type;
+    switch (type) {
+      case NODE_TYPE.ADV:
+        this.eMax = 10;
+        break;
+      case NODE_TYPE.INT:
+        this.eMax = 5;
+        break;
+      case NODE_TYPE.NRM:
+        this.eMax = 3;
+        break;
+    }
+    this.residualEnergy = this.eMax;
+  }
+
+  /**
+   * Calculate the energy factor.
+   */
+  energyFactor() {
+    let eFactor = this.residualEnergy / this.eMax;
+    return eFactor;
   }
 
   /**
@@ -16,7 +36,6 @@ class Node {
     strokeWeight(1);
     switch (this.type) {
       case NODE_TYPE.ADV:
-        fill(255)
         triangle(
           this.position.x,
           this.position.y,
@@ -30,7 +49,7 @@ class Node {
         ellipse(this.position.x, this.position.y, 8, 8);
         break;
       case NODE_TYPE.INT:
-        rect(this.position.x, this.position.y, 10, 10)
+        rect(this.position.x, this.position.y, 10, 10);
         break;
     }
   }

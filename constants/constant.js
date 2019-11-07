@@ -7,6 +7,8 @@ const NODE_TYPE = {
     NRM: 'Normal'
 }
 
+const POPULATION_SIZE = 30;
+
 const CWIDTH = 600,
       CHEIGHT = 600,
       SPAWN_BORDER = 70,

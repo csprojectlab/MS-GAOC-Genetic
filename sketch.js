@@ -1,17 +1,26 @@
-var network;
+var population;
 
 function setup() {
   createCanvas(CWIDTH, CHEIGHT);
-  network = new Network()
+  /**
+   * Network setup:
+   * - Initialize parameters
+   * - generate nodes based on parameters
+   * - generate sinks
+   * - calculate distances
+   */
+  let network = new Network()
     .initializeNetworkParameters()
     .generateHeterogenousNodes()
     .generateSinks()
     .calculateDistanceBetweenNodes()
     .calculateDistanceBetweenNodeAndSink();
+
+  population = new Population(network, POPULATION_SIZE).boot();
 }
 
 /**
- *
+ * Draw loop running atleast 60 frames or times per second.
  */
 function draw() {
   background(0);
@@ -20,7 +29,7 @@ function draw() {
    * Required for MS-GAOC.
    */
   displayNetworkBorder();
-  network.display();
+  population.display();
 }
 
 /**

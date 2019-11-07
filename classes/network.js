@@ -22,6 +22,12 @@ class Network {
     this.eIntermediate = 0;
     this.eNormal = 0;
 
+    /**
+     * E_t field
+     */
+    this.networkEnergy = 0;
+    this.eth = 0.3;
+
     return this;
   }
 
@@ -55,6 +61,14 @@ class Network {
       E_INITIAL_ENERGY *
       (1 - ADVANCED_NODE_FRACTION - INTERMEDIATE_NODE_FRACTION) *
       NUMBER_OF_NODES;
+
+    this.networkEnergy =
+      NUMBER_OF_NODES *
+      E_INITIAL_ENERGY *
+      (1 +
+        ENERGY_FRACTION_INTERMEDIATE_BETA * INTERMEDIATE_NODE_FRACTION +
+        ADVANCED_NODE_FRACTION * ENERGY_FRACTION_ADVANCED_ALPHA);
+    console.log("Network Energy ET: ", this.networkEnergy);
     return this;
   }
 
@@ -154,10 +168,40 @@ class Network {
   }
 
   /**
-   * Display function. 
+   * Returns closest sink's index corresponding to this node index.
    */
-  display () {
-      this.nodes.forEach (node => node.display());
-      this.sinks.forEach(sink => sink.display())
+  closestSinkIndex(node_index) {
+    let closest = Infinity,
+      i = -1;
+    this.sinkDistanceMatrix[node_index].forEach((sink_distance, index) => {
+      if (sink_distance < closest) {
+        closest = sink_distance;
+        i = index;
+      }
+    });
+    return i;
+  }
+
+  /**
+   * Returns farthest sink's index corresponding to this node index.
+   */
+  farthestSinkIndex(node_index) {
+    let farthest = -100,
+      i = -1;
+    this.sinkDistanceMatrix[node_index].forEach((sink_distance, index) => {
+      if (sink_distance > farthest) {
+        farthest = sink_distance;
+        i = index;
+      }
+    });
+    return i;
+  }
+
+  /**
+   * Display function.
+   */
+  display() {
+    this.nodes.forEach(node => node.display());
+    this.sinks.forEach(sink => sink.display());
   }
 }
