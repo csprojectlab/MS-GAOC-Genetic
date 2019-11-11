@@ -55,7 +55,6 @@ class Population {
       }
     });
     this.bestChromosomeIndex = currentBestIndex;
-    console.log(this.chromosomes[this.bestChromosomeIndex])
     return this;
   }
 
@@ -78,6 +77,6 @@ class Population {
    * Display function.
    */
   display() {
-    this.network.display(this.chromosomes[chromosomeDisplayIndex].genes);
+    this.network.display(this.chromosomes[this.bestChromosomeIndex].genes);
   }
 }

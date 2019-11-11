@@ -198,11 +198,47 @@ class Network {
   }
 
   /**
+   * Finds the closest cluster head of the parameter node.
+   * Returns index of closest cluster head.
+   * Returns -1 if no cluster head lie in the vicinity.
+   */
+  closestClusterHead(node_index, clusterHeadIndices) {
+    let closestCHIndex = -1,
+      currentDistance = Infinity,
+      closestDistance = Infinity;
+    clusterHeadIndices.forEach(ch_index => {
+      currentDistance = this.distanceMatrix[node_index][ch_index];
+      if (currentDistance <= VICINITY && currentDistance < closestDistance)
+        closestCHIndex = ch_index;
+    });
+    return closestCHIndex;
+  }
+
+  /**
    * Display function.
-   * The length of genes and nodes array is same. 
+   * The length of genes and nodes array is same.
    */
   display(genes) {
+    let i;
+    // Display the nodes and sinks.
     this.nodes.forEach((node, index) => node.display(genes[index]));
     this.sinks.forEach(sink => sink.display());
+
+    // Display the links between nodes and CH.
+    // Find cluster head indices.
+    let clusterHeadIndices = [];
+    genes.forEach((g, index) => {
+      if (g) clusterHeadIndices.push(index);
+    });
+    this.nodes.forEach((node, index) => {
+      // Find cluster head of current node.
+      i = this.closestClusterHead(index, clusterHeadIndices);
+      if (i == -1) {
+        // Link to closest sink.
+      } else {
+        // Link to the closest cluster head.
+        node.displayLink(this.nodes[i]);
+      }
+    });
   }
 }

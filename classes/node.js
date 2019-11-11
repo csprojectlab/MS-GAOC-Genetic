@@ -28,6 +28,15 @@ class Node {
   }
 
   /**
+   * Display the link with another node which is CH
+   */
+  displayLink (ch) {
+    stroke(255, 255, 0);
+    strokeWeight(0.3);
+    line(this.position.x, this.position.y, ch.position.x, ch.position.y);
+  }
+
+  /**
    * Display function based on type of node.
    */
   display(isCH) {
