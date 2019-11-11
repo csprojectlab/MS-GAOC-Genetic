@@ -27,15 +27,15 @@ class Chromosome {
    * Validate the current length of the genes array.
    * No two CH's should lie in each others vicinity.
    */
-  validGene(index) {
+  validGene(genes, index) {
     let d;
     /**
      * Pick the last gene and validate it with previuos genes.
      * This will automatically build valid gene till end.
      */
     // this cluster head should not lie in the vicinity of previously chosed CHs by the gene.
-    for (let i = 0; i < this.genes.length; i++) {
-      if (i != index && this.genes[i] == 1) {
+    for (let i = 0; i < genes.length; i++) {
+      if (i != index && genes[i] == 1) {
         // If gene selects node as cluster head.
         d = this.network.distanceMatrix[i][index];
         if (d < VICINITY) return false;
@@ -55,7 +55,7 @@ class Chromosome {
       limit = floor(random(NUMBER_OF_CH - 3, NUMBER_OF_CH + 1));
     while (i <= limit) {
       index = floor(random(selectionGene.length));
-      if (this.validGene(selectionGene[index])) {
+      if (this.validGene(this.genes, selectionGene[index])) {
         this.genes[selectionGene[index]] = 1;
         i++;
       }
@@ -160,12 +160,37 @@ class Chromosome {
    * Performs one point crossover.
    */
   crossover(partner) {
-    let child = new Chromosome(this.network),
-      cutPoint = floor(random(this.genes.length));
+    let child = null,
+      cutPoint = floor(random(this.genes.length)),
+      genes = [],
+      valid = true;
+    for (let i = 0; i < this.genes.length; i++) {
+      if (i < cutPoint) {
+        genes[i] = this.genes[i];
+      } else {
+        genes[i] = partner.genes[i];
+      }
+    }
+    for (let i = 0; i < genes.length; i++) {
+      if (genes[i]) {
+        if (!this.validGene (genes, i)) {
+          valid = false;
+          break;
+        }
+      }
+    }
+    if (valid) {
+      child = new Chromosome(this.network);
+      child.genes = genes;
+      child.clusterHeadCount = child.genes.filter(x => x == 1).length;
+    }
+    return child;
   }
 
   /**
    * Mutate function
    */
-  mutate() {}
+  mutate(mutation_rate) {
+    
+  }
 }

@@ -4,21 +4,23 @@
 var population, network;
 
 /**
- * Display Variables. 
+ * Display Variables.
  */
-var displayClusters = false,
-  displayClusterLinks = false,
+var displayClusters = true,
+  displayClusterLinks = true,
   displaySinkLinks = false;
 
 /**
  * Debugging variables.
  */
 var farthestSinkIndex = -1,
-  nodeIndex = -1;
-  //chromosomeDisplayIndex = 0;
+  nodeIndex = -1,
+  generationCount = 0;
+//chromosomeDisplayIndex = 0;
 
 function setup() {
   createCanvas(CWIDTH, CHEIGHT);
+  frameRate(1);
   /**
    * Network setup:
    * - Initialize parameters
@@ -43,12 +45,17 @@ function setup() {
  */
 function draw() {
   background(0);
+  generationCount++;
+  // console.log(generationCount)
   /**
    * Display the network border in rectangular form.
    * Required for MS-GAOC.
    */
   displayNetworkBorder();
-  population.display();
+  population
+    .fittest()
+    .display()
+    .evolve();
 }
 
 /**
@@ -68,13 +75,10 @@ function displayNetworkBorder() {
 }
 
 /**
- * For debugging and interation purpose. 
+ * For debugging and interation purpose.
  */
 function keyPressed() {
-  if (key == 'c' || key == 'C') 
-    displayClusters = !displayClusters;
-  else if (key == 'l' || key == 'L')
-    displayClusterLinks = !displayClusterLinks;
-  else if (key == 's' || key == 'S')
-    displaySinkLinks = !displaySinkLinks;
+  if (key == "c" || key == "C") displayClusters = !displayClusters;
+  else if (key == "l" || key == "L") displayClusterLinks = !displayClusterLinks;
+  else if (key == "s" || key == "S") displaySinkLinks = !displaySinkLinks;
 }

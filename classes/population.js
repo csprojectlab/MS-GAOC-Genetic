@@ -99,12 +99,24 @@ class Population {
       offset = 1;
     }
     while (newChromosomes.length < this.size) {
-      // Select two parents. 
-      parentA = this.chromosomes[floor(random(matingPool.length))];
-      parentB = this.chromosomes[floor(random(matingPool.length))];
-      childChromosome = parentA.crossover(partnerB);
-      if (childChromosome) {
-        newChromosomes.push(childChromosome)
+      if (random(1) < CROSSOVER_RATE) {
+        // Select two parents.
+        parentA = this.chromosomes[
+          matingPool[floor(random(matingPool.length))]
+        ];
+        parentB = this.chromosomes[
+          matingPool[floor(random(matingPool.length))]
+        ];
+        childChromosome = parentA.crossover(parentB);
+        if (childChromosome) {
+          childChromosome.mutate(MUTATION_RATE);
+          newChromosomes.push(childChromosome);
+        } else {
+          console.log("null child");
+        }
+      } else {
+        newChromosomes.push(this.chromosomes[offset].copy());
+        offset++;
       }
     }
 
@@ -117,5 +129,6 @@ class Population {
    */
   display() {
     this.network.display(this.chromosomes[this.bestChromosomeIndex].genes);
+    return this;
   }
 }
