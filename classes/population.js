@@ -125,10 +125,20 @@ class Population {
   }
 
   /**
-   * Display function.
+   * Display function. 
+   * - Display the best network structure. 
    */
   display() {
     this.network.display(this.chromosomes[this.bestChromosomeIndex].genes);
     return this;
+  }
+
+  /**
+   * Display all 
+   */
+  displayAll() {
+    this.chromosomes.forEach (chromosome => {
+      this.network.display(chromosome.genes);
+    })
   }
 }

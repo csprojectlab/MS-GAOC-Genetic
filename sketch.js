@@ -8,7 +8,8 @@ var population, network;
  */
 var displayClusters = false,
   displayClusterLinks = true,
-  displaySinkLinks = true;
+  displaySinkLinks = false,
+  pause = false;
 
 /**
  * Debugging variables.
@@ -19,7 +20,7 @@ var farthestSinkIndex = -1,
 //chromosomeDisplayIndex = 0;
 
 function setup() {
-  createCanvas(CWIDTH, CHEIGHT);
+  createCanvas(OWIDTH, OHEIGHT);
   frameRate(10);
   /**
    * Network setup:
@@ -37,7 +38,7 @@ function setup() {
 
   population = new Population(network, POPULATION_SIZE, true)
     .boot()
-    .generateChromosomePopulation()//.fittest()//.evolve();
+    .generateChromosomePopulation(); //.fittest()//.evolve();
 }
 
 /**
@@ -48,7 +49,7 @@ function draw() {
   generationCount++;
   if (generationCount == 300) {
     alert("Network stable");
-    noLoop();
+    // noLoop();
   }
   // console.log(generationCount)
   /**
@@ -56,10 +57,16 @@ function draw() {
    * Required for MS-GAOC.
    */
   displayNetworkBorder();
-  population
-    .fittest()
-    .display()
-    .evolve();
+  population.fittest().display();
+  push();
+  translate(CWIDTH, 0);
+  stroke(255);
+  strokeWeight(4);
+  line(0, 0, 0, OHEIGHT);
+  displayNetworkBorder();
+  population.displayAll();
+  pop();
+  population.evolve();
 }
 
 /**
@@ -85,5 +92,9 @@ function keyPressed() {
   if (key == "c" || key == "C") displayClusters = !displayClusters;
   else if (key == "l" || key == "L") displayClusterLinks = !displayClusterLinks;
   else if (key == "s" || key == "S") displaySinkLinks = !displaySinkLinks;
-  else if (key == 'p' || key == 'P') noLoop();
+  else if (key == "p" || key == "P") {
+    pause = !pause;
+    if (pause) noLoop();
+    else loop();
+  }
 }

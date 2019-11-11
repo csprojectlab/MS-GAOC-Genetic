@@ -8,8 +8,8 @@ const NODE_TYPE = {
 };
 
 const LINK = {
-  CH_LINK: 'Cluster_to_node_link',
-  SINK_LINK: 'ClusterHead_to_sink_link'
+  CH_LINK: "Cluster_to_node_link",
+  SINK_LINK: "ClusterHead_to_sink_link"
 };
 
 const POPULATION_SIZE = 30,
@@ -20,11 +20,13 @@ const POPULATION_SIZE = 30,
   CROSSOVER_RATE = 0.6,
   MUTATION_RATE = 0.006;
 
-const CWIDTH = 400,
+const OWIDTH = 800,
+  OHEIGHT = 400,
+  CWIDTH = 400,
   CHEIGHT = 400,
   SPAWN_BORDER = 70,
   NUMBER_OF_NODES = 100,
-  NUMBER_OF_CH = 6,
+  NUMBER_OF_CH = 4,
   NUMBER_OF_SINKS = 1,
   INTERMEDIATE_NODE_FRACTION = 0.1,
   ADVANCED_NODE_FRACTION = 0.2,

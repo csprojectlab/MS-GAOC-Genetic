@@ -84,6 +84,7 @@ class Node {
     if (isCH && displayClusters) {
       noFill();
       stroke(0, 255, 0);
+      strokeWeight(0.5)
       ellipse(this.position.x, this.position.y, 2 * VICINITY);
     }
   }
