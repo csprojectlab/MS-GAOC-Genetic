@@ -124,8 +124,10 @@ class Network {
    * Function to generate sinks.
    */
   generateSinks() {
-    let s = new Sink(CWIDTH / 2, CHEIGHT / 2);
-    this.sinks.push(s);
+    this.sinks.push(new Sink(35, CHEIGHT / 2));
+    this.sinks.push(new Sink(CWIDTH - 35, CHEIGHT / 2));
+    this.sinks.push(new Sink(CWIDTH / 2, 35));
+    this.sinks.push(new Sink(CWIDTH / 2, CHEIGHT - 35));
     return this;
   }
 
