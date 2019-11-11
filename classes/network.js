@@ -199,9 +199,10 @@ class Network {
 
   /**
    * Display function.
+   * The length of genes and nodes array is same. 
    */
-  display() {
-    this.nodes.forEach(node => node.display());
+  display(genes) {
+    this.nodes.forEach((node, index) => node.display(genes[index]));
     this.sinks.forEach(sink => sink.display());
   }
 }

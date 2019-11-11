@@ -5,18 +5,51 @@
 class Chromosome {
   constructor(network) {
     this.network = network;
-    this.genes = new Array(network.nodes.length);
+    this.size = network.nodes.length;
+    this.genes = new Array(this.size)
+    this.clusterHeadCount = 0;
     return this;
   }
 
+  /**
+   * Validate the current length of the genes array.
+   * No two CH's should lie in each others vicinity.
+   */
+  validGene(index) {
+    let d;
+    /**
+     * Pick the last gene and validate it with previuos genes.
+     * This will automatically build valid gene till end.
+     */
+    // this cluster head should not lie in the vicinity of previously chosed CHs by the gene.
+    for (let i = 0; i < this.genes.length; i++) {
+      if (i != index && this.genes[i] == 1) {
+        // If gene selects node as cluster head.
+        d = this.network.distanceMatrix[i][index];
+        if (d < VICINITY) return false;
+      }
+    }
+    return true;
+  }
   /**
    * generate chromosome.
    * - Some validations need to be done.
    */
   generateChromosome() {
-    for (let i = 0; i < this.genes.length; i++) {
-      if (random(1) < 0.7) this.genes[i] = 0;
-      else this.genes[i] = 1;
+    let i = 1,
+      limit,
+      index,
+      usedIndices = [];
+    this.genes.fill(0);
+    limit = floor(random(NUMBER_OF_CH - 4, NUMBER_OF_CH + 1));
+    while (i <= limit) {
+      index = floor(random(this.genes.length));
+      if (!usedIndices.includes(index) && this.validGene(index)) {
+        usedIndices.push(index)
+        this.genes[index] = 1;
+        i++;
+        this.clusterHeadCount++;
+      }
     }
     return this;
   }
@@ -52,10 +85,13 @@ class Chromosome {
      * - Sum the closest distance and find the average distance as well.
      */
     this.network.nodes.forEach((_, node_index) => {
-      d = this.network.sinkDistanceMatrix[node_index][
-        this.network.farthestSinkIndex(node_index)
-      ];
-      if (d > farthestSinkDistance) farthestSinkDistance = d;
+      let i = this.network.farthestSinkIndex(node_index);
+      d = this.network.sinkDistanceMatrix[node_index][i];
+      if (d > farthestSinkDistance) {
+        farthestSinkDistance = d;
+        farthestSinkIndex = i;
+        nodeIndex = node_index;
+      }
     });
 
     this.network.nodes.forEach((_, node_index) => {

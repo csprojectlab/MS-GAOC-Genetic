@@ -24,9 +24,17 @@ class Population {
      */
     this.chromosomes = new Array(this.size);
     for (let i = 0; i < this.size; i++) {
-      this.chromosomes[i] = new Chromosome(this.network).generateChromosome();
-      this.chromosomes[i].calculateFitness();
+      this.chromosomes[i] = new Chromosome(this.network);
+      //this.chromosomes[i].calculateFitness();
     }
+    return this;
+  }
+
+  /**
+   * Generate chromosomes. 
+   */
+  generateChromosomePopulation () {
+    this.chromosomes.forEach(chromosome => chromosome.generateChromosome());
     return this;
   }
 
@@ -49,6 +57,6 @@ class Population {
    * Display function.
    */
   display() {
-    this.network.display();
+    this.network.display(this.chromosomes[chromosomeDisplayIndex].genes);
   }
 }

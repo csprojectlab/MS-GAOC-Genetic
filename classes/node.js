@@ -30,10 +30,12 @@ class Node {
   /**
    * Display function based on type of node.
    */
-  display() {
+  display(isCH) {
     noFill();
+    if (isCH)
+      fill(0, 255, 0);
     stroke(255);
-    strokeWeight(1);
+    strokeWeight(0.4);
     switch (this.type) {
       case NODE_TYPE.ADV:
         triangle(
@@ -51,6 +53,10 @@ class Node {
       case NODE_TYPE.INT:
         rect(this.position.x, this.position.y, 10, 10);
         break;
+    }
+    if (isCH) {
+      noFill();
+    ellipse(this.position.x , this.position.y, VICINITY);
     }
   }
 }
