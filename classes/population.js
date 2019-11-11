@@ -3,9 +3,10 @@
  * The network provided should be already initialized.
  */
 class Population {
-  constructor(network, population_size = 10) {
+  constructor(network, population_size = 10, elitism) {
     this.network = network;
     this.size = population_size;
+    this.elitism = elitism;
     /**
      * 2-D array holding the population used for selection of CH.
      */
@@ -49,7 +50,7 @@ class Population {
     this.chromosomes.forEach((chromosome, index) => {
       if (index == 0) return;
       f = chromosome.calculateFitness();
-      if (f < currentFitness) {
+      if (f > currentFitness) {
         currentFitness = f;
         currentBestIndex = index;
       }
@@ -59,19 +60,57 @@ class Population {
   }
 
   /**
-   * Crossover function.
+   * Normalize the fitness value.
+   * Save the normalized fitness value in the chromosome itself.
    */
-  crossover() {}
+  normalizeFitness() {
+    let sum = 0;
+    this.chromosomes.forEach(chromosome => (sum += chromosome.fitness));
+    this.chromosomes.forEach(chromosome => (chromosome.fitness /= sum));
+  }
 
   /**
-   * Mutate function
+   * Create mating pool for cross over.
+   * This should be called after normalizing the fitness of network.
    */
-  mutate() {}
+  createMatingPool() {
+    let matingPool = [],
+      limit;
+    this.chromosomes.forEach((chromosome, index) => {
+      limit = chromosome.fitness * 1000;
+      for (let i = 0; i < limit; i++) matingPool.push(index);
+    });
+    return matingPool;
+  }
 
   /**
    * evolution of network population.
    */
-  evolve() {}
+  evolve() {
+    this.normalizeFitness();
+    let matingPool = this.createMatingPool(),
+      newChromosomes = [],
+      offset = 0,
+      parentA,
+      parentB,
+      childChromosome;
+    if (this.elitism) {
+      newChromosomes.push(this.chromosomes[this.bestChromosomeIndex].copy());
+      offset = 1;
+    }
+    while (newChromosomes.length < this.size) {
+      // Select two parents. 
+      parentA = this.chromosomes[floor(random(matingPool.length))];
+      parentB = this.chromosomes[floor(random(matingPool.length))];
+      childChromosome = parentA.crossover(partnerB);
+      if (childChromosome) {
+        newChromosomes.push(childChromosome)
+      }
+    }
+
+    this.chromosomes = newChromosomes;
+    return this;
+  }
 
   /**
    * Display function.

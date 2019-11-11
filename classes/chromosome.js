@@ -6,10 +6,21 @@ class Chromosome {
   constructor(network) {
     this.network = network;
     this.size = network.nodes.length;
-    this.genes = new Array(this.size);
+    this.genes = new Array(this.size).fill(0);
     this.clusterHeadCount = 0;
     this.fitness = 0;
     return this;
+  }
+
+  /**
+   * Copy function.
+   */
+  copy() {
+    let chromeCopy = new Chromosome(this.network);
+    chromeCopy.genes = this.genes;
+    chromeCopy.clusterHeadCount = this.clusterHeadCount;
+    chromeCopy.fitness = this.fitness;
+    return chromeCopy;
   }
 
   /**
@@ -138,7 +149,23 @@ class Chromosome {
       fp2 = this.calculateFP2(),
       fp3 = this.calculateFP3(),
       f = VARPHI * fp1 + DELTA * fp2 + GAMMA * fp3;
-    this.fitness = 1 / f;
+    this.fitness = f;
+    this.fitness = pow(this.fitness, 2); // Increasing fitness amplitude.
     return this.fitness;
   }
+
+  /**
+   * Crossover function.
+   * Returns null is crossover is not succcessful or valid.
+   * Performs one point crossover.
+   */
+  crossover(partner) {
+    let child = new Chromosome(this.network),
+      cutPoint = floor(random(this.genes.length));
+  }
+
+  /**
+   * Mutate function
+   */
+  mutate() {}
 }

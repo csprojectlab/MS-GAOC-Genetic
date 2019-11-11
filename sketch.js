@@ -33,9 +33,9 @@ function setup() {
     .calculateDistanceBetweenNodes()
     .calculateDistanceBetweenNodeAndSink();
 
-  population = new Population(network, POPULATION_SIZE)
+  population = new Population(network, POPULATION_SIZE, true)
     .boot()
-    .generateChromosomePopulation();
+    .generateChromosomePopulation().fittest().evolve();
 }
 
 /**
@@ -48,7 +48,7 @@ function draw() {
    * Required for MS-GAOC.
    */
   displayNetworkBorder();
-  population.fittest().display();
+  population.display();
 }
 
 /**
