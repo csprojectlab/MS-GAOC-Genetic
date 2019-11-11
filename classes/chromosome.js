@@ -6,7 +6,7 @@ class Chromosome {
   constructor(network) {
     this.network = network;
     this.size = network.nodes.length;
-    this.genes = new Array(this.size)
+    this.genes = new Array(this.size);
     this.clusterHeadCount = 0;
     return this;
   }
@@ -38,9 +38,9 @@ class Chromosome {
   generateChromosome() {
     this.genes.fill(0);
     let selectionGene = this.genes.map((_, index) => index),
-        i = 1,
-        index,
-        limit = floor(random(NUMBER_OF_CH - 3, NUMBER_OF_CH + 1));
+      i = 1,
+      index,
+      limit = floor(random(NUMBER_OF_CH - 3, NUMBER_OF_CH + 1));
     while (i <= limit) {
       index = floor(random(selectionGene.length));
       if (this.validGene(selectionGene[index])) {
@@ -106,11 +106,33 @@ class Chromosome {
   }
 
   /**
+   * FP3
+   * Node density around the cluster head.
+   */
+  calculateFP3() {
+    let nodeCount = 0;
+    /**
+     * Process only cluster heads
+     */
+    this.genes.forEach((geneValue, index) => {
+      if (geneValue) {
+        // Find number of nodes in the vicinity of corresponding node to this gene value.
+        nodeCount += this.network.distanceMatrix[index].filter(
+          d => d <= VICINITY
+        ).length;
+      }
+    });
+    return nodeCount;
+  }
+
+  /**
    * Function to calculate the fitness of network based on this chromosome.
    */
   calculateFitness() {
     let fp1 = this.calculateFP1(),
-      fp2 = this.calculateFP2();
+      fp2 = this.calculateFP2(),
+      fp3 = this.calculateFP3();
+    //console.log(fp3);
 
     return this;
   }

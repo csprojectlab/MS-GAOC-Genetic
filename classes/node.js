@@ -56,7 +56,9 @@ class Node {
     }
     if (isCH) {
       noFill();
-    ellipse(this.position.x , this.position.y, VICINITY);
+      stroke(0, 0, 255)
+      ellipse(this.position.x , this.position.y, 2*VICINITY);
+
     }
   }
 }

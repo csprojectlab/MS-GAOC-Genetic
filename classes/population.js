@@ -31,10 +31,18 @@ class Population {
   }
 
   /**
-   * Generate chromosomes. 
+   * Generate chromosomes.
    */
-  generateChromosomePopulation () {
+  generateChromosomePopulation() {
     this.chromosomes.forEach(chromosome => chromosome.generateChromosome());
+    return this;
+  }
+
+  /**
+   * Find the fittest network structure.
+   */
+  fittest() {
+    this.chromosomes.forEach(chromosome => chromosome.calculateFitness());
     return this;
   }
 

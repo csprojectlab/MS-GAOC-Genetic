@@ -28,7 +28,8 @@ function setup() {
 
   population = new Population(network, POPULATION_SIZE)
     .boot()
-    .generateChromosomePopulation();
+    .generateChromosomePopulation()
+    .fittest();
 }
 
 /**
