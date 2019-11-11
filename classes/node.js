@@ -30,7 +30,8 @@ class Node {
   /**
    * Display the link with another node which is CH
    */
-  displayLink (ch) {
+  displayLink(ch) {
+    if (!displayLinks) return;
     stroke(255, 255, 0);
     strokeWeight(0.3);
     line(this.position.x, this.position.y, ch.position.x, ch.position.y);
@@ -41,8 +42,7 @@ class Node {
    */
   display(isCH) {
     noFill();
-    if (isCH)
-      fill(0, 255, 0);
+    if (isCH) fill(0, 255, 0);
     stroke(255);
     strokeWeight(0.4);
     switch (this.type) {
@@ -63,11 +63,10 @@ class Node {
         rect(this.position.x, this.position.y, 10, 10);
         break;
     }
-    if (isCH) {
+    if (isCH && displayClusters) {
       noFill();
-      stroke(0, 255, 0)
-      ellipse(this.position.x , this.position.y, 2*VICINITY);
-
+      stroke(0, 255, 0);
+      ellipse(this.position.x, this.position.y, 2 * VICINITY);
     }
   }
 }

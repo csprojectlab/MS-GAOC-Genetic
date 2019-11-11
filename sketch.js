@@ -4,6 +4,12 @@
 var population, network;
 
 /**
+ * Display Variables. 
+ */
+var displayClusters = true,
+  displayLinks = true;
+
+/**
  * Debugging variables.
  */
 var farthestSinkIndex = -1,
@@ -41,8 +47,7 @@ function draw() {
    * Required for MS-GAOC.
    */
   displayNetworkBorder();
-  // population.fittest().display();
-  population.display();
+  population.fittest().display();
 }
 
 /**
@@ -62,14 +67,11 @@ function displayNetworkBorder() {
 }
 
 /**
- * For debugging purpose.
+ * For debugging and interation purpose. 
  */
 function keyPressed() {
-  // // console.log("Key pressed. ")
-  // if (key == "n" || key == "N") {
-  //   chromosomeDisplayIndex = (chromosomeDisplayIndex + 1) % POPULATION_SIZE;
-  //   console.log(
-  //     population.chromosomes[chromosomeDisplayIndex].clusterHeadCount
-  //   );
-  // }
+  if (key == 'c' || key == 'C') 
+    displayClusters = !displayClusters;
+  else if (key == 'l' || key == 'L')
+    displayLinks = !displayLinks;
 }
