@@ -107,7 +107,7 @@ class Population {
         parentB = this.chromosomes[
           matingPool[floor(random(matingPool.length))]
         ];
-        childChromosome = parentA.crossover(parentB);
+        childChromosome = parentA.crossover(parentB);   // returns a valid chromosome network
         if (childChromosome) {
           childChromosome.mutate(MUTATION_RATE);
           newChromosomes.push(childChromosome);

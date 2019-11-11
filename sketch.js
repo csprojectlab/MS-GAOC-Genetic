@@ -7,7 +7,7 @@ var population, network;
  * Display Variables.
  */
 var displayClusters = true,
-  displayClusterLinks = true,
+  displayClusterLinks = false,
   displaySinkLinks = false;
 
 /**
@@ -20,7 +20,7 @@ var farthestSinkIndex = -1,
 
 function setup() {
   createCanvas(CWIDTH, CHEIGHT);
-  frameRate(1);
+  // frameRate(1);
   /**
    * Network setup:
    * - Initialize parameters
@@ -37,7 +37,7 @@ function setup() {
 
   population = new Population(network, POPULATION_SIZE, true)
     .boot()
-    .generateChromosomePopulation().fittest().evolve();
+    .generateChromosomePopulation()//.fittest()//.evolve();
 }
 
 /**
@@ -81,4 +81,5 @@ function keyPressed() {
   if (key == "c" || key == "C") displayClusters = !displayClusters;
   else if (key == "l" || key == "L") displayClusterLinks = !displayClusterLinks;
   else if (key == "s" || key == "S") displaySinkLinks = !displaySinkLinks;
+  else if (key == 'p' || key == 'P') noLoop();
 }

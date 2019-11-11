@@ -162,18 +162,18 @@ class Chromosome {
   crossover(partner) {
     let child = null,
       cutPoint = floor(random(this.genes.length)),
-      genes = [],
+      childGenes = [],
       valid = true;
     for (let i = 0; i < this.genes.length; i++) {
       if (i < cutPoint) {
-        genes[i] = this.genes[i];
+        childGenes.push(this.genes[i]);
       } else {
-        genes[i] = partner.genes[i];
+        childGenes.push(partner.genes[i]);
       }
     }
-    for (let i = 0; i < genes.length; i++) {
-      if (genes[i]) {
-        if (!this.validGene (genes, i)) {
+    for (let i = 0; i < childGenes.length; i++) {
+      if (childGenes[i] == 1) {
+        if (!this.validGene(childGenes, i)) {
           valid = false;
           break;
         }
@@ -181,7 +181,7 @@ class Chromosome {
     }
     if (valid) {
       child = new Chromosome(this.network);
-      child.genes = genes;
+      child.genes = childGenes;
       child.clusterHeadCount = child.genes.filter(x => x == 1).length;
     }
     return child;
@@ -191,6 +191,15 @@ class Chromosome {
    * Mutate function
    */
   mutate(mutation_rate) {
-    
+    for (let i = 0; i < this.genes.length; i++) {
+      if (random(1) < mutation_rate) {
+        if (this.genes[i] == 0) {
+          // Means we have to make this 1.
+          if (this.validGene(this.genes, i)) this.genes[i] = 1;
+        } else {
+          this.genes[i] = 0;
+        }
+      }
+    }
   }
 }
