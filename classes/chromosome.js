@@ -110,16 +110,20 @@ class Chromosome {
    * Node density around the cluster head.
    */
   calculateFP3() {
-    let nodeCount = 0;
+    let nodeCount = 0,
+      countedNodes = [];
     /**
      * Process only cluster heads
      */
     this.genes.forEach((geneValue, index) => {
       if (geneValue) {
         // Find number of nodes in the vicinity of corresponding node to this gene value.
-        nodeCount += this.network.distanceMatrix[index].filter(
-          d => d <= VICINITY
-        ).length;
+        this.network.distanceMatrix[index].forEach ((d, d_index) => {
+          if (d < VICINITY && !countedNodes.includes(d_index)) {
+            nodeCount++;
+            countedNodes.push(d_index);
+          }
+        });
       }
     });
     return nodeCount;
@@ -132,7 +136,7 @@ class Chromosome {
     let fp1 = this.calculateFP1(),
       fp2 = this.calculateFP2(),
       fp3 = this.calculateFP3();
-    //console.log(fp3);
+    console.log(fp3);
 
     return this;
   }

@@ -7,7 +7,7 @@ const NODE_TYPE = {
   NRM: "Normal"
 };
 
-const POPULATION_SIZE = 30,
+const POPULATION_SIZE = 1,
   VICINITY = 70;
 
 const CWIDTH = 500,
