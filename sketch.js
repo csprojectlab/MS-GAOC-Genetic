@@ -79,6 +79,6 @@ function keyPressed () {
   // console.log("Key pressed. ")
   if (key == 'n' || key == 'N') {
     chromosomeDisplayIndex = (chromosomeDisplayIndex + 1) % POPULATION_SIZE;
-    // console.log(chromosomeDisplayIndex)
+    console.log(population.chromosomes[chromosomeDisplayIndex].clusterHeadCount)
   }
 }

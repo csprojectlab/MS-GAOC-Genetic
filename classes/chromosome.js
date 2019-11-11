@@ -36,20 +36,19 @@ class Chromosome {
    * - Some validations need to be done.
    */
   generateChromosome() {
-    let i = 1,
-      limit,
-      index,
-      usedIndices = [];
     this.genes.fill(0);
-    limit = floor(random(NUMBER_OF_CH - 4, NUMBER_OF_CH + 1));
+    let selectionGene = this.genes.map((_, index) => index),
+        i = 1,
+        index,
+        limit = floor(random(NUMBER_OF_CH - 3, NUMBER_OF_CH + 1));
     while (i <= limit) {
-      index = floor(random(this.genes.length));
-      if (!usedIndices.includes(index) && this.validGene(index)) {
-        usedIndices.push(index)
-        this.genes[index] = 1;
+      index = floor(random(selectionGene.length));
+      if (this.validGene(selectionGene[index])) {
+        this.genes[selectionGene[index]] = 1;
         i++;
         this.clusterHeadCount++;
       }
+      selectionGene.splice(index, 1);
     }
     return this;
   }
