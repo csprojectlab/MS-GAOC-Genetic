@@ -208,8 +208,10 @@ class Network {
       closestDistance = Infinity;
     clusterHeadIndices.forEach(ch_index => {
       currentDistance = this.distanceMatrix[node_index][ch_index];
-      if (currentDistance <= VICINITY && currentDistance < closestDistance)
+      if (currentDistance <= VICINITY && currentDistance < closestDistance) {
+        closestDistance = currentDistance;
         closestCHIndex = ch_index;
+      }
     });
     return closestCHIndex;
   }
@@ -237,8 +239,14 @@ class Network {
         // Link to closest sink.
       } else {
         // Link to the closest cluster head.
-        node.displayLink(this.nodes[i]);
+        node.displayLink(this.nodes[i], LINK.CH_LINK, color(255, 255, 0));
       }
+    });
+
+    // Display link between CH and sink
+    clusterHeadIndices.forEach (ch_index => {
+      i = this.closestSinkIndex(ch_index);
+      this.nodes[ch_index].displayLink(this.sinks[i], LINK.SINK_LINK, color(0, 255, 255));
     });
   }
 }

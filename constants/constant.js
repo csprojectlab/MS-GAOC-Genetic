@@ -7,6 +7,11 @@ const NODE_TYPE = {
   NRM: "Normal"
 };
 
+const LINK = {
+  CH_LINK: 'Cluster_to_node_link',
+  SINK_LINK: 'ClusterHead_to_sink_link'
+};
+
 const POPULATION_SIZE = 30,
   VICINITY = 70,
   VARPHI = 0.3,

@@ -28,13 +28,31 @@ class Node {
   }
 
   /**
-   * Display the link with another node which is CH
+   * Display the link with another node.
    */
-  displayLink(ch) {
-    if (!displayLinks) return;
-    stroke(255, 255, 0);
+  displayLink(otherNode, link_type, col) {
+    stroke(col);
     strokeWeight(0.3);
-    line(this.position.x, this.position.y, ch.position.x, ch.position.y);
+    switch (link_type) {
+      case LINK.CH_LINK:
+        if (!displayClusterLinks) return;
+        line(
+          this.position.x,
+          this.position.y,
+          otherNode.position.x,
+          otherNode.position.y
+        );
+        break;
+      case LINK.SINK_LINK:
+        if (!displaySinkLinks) return;
+        line(
+          this.position.x,
+          this.position.y,
+          otherNode.position.x,
+          otherNode.position.y
+        );
+        break;
+    }
   }
 
   /**

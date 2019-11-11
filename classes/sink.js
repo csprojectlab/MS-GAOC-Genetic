@@ -11,7 +11,8 @@ class Sink {
      */
     display () {
         fill(255, 0, 0);
-        noStroke();
-        rect (this.position.x, this.position.y, 20, 20);
+        stroke(255, 0, 0);
+        strokeWeight(2)
+        ellipse (this.position.x, this.position.y, 2, 2);
     }
 }

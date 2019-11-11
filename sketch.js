@@ -6,8 +6,9 @@ var population, network;
 /**
  * Display Variables. 
  */
-var displayClusters = true,
-  displayLinks = true;
+var displayClusters = false,
+  displayClusterLinks = false,
+  displaySinkLinks = false;
 
 /**
  * Debugging variables.
@@ -34,7 +35,7 @@ function setup() {
 
   population = new Population(network, POPULATION_SIZE)
     .boot()
-    .generateChromosomePopulation().fittest();
+    .generateChromosomePopulation();
 }
 
 /**
@@ -73,5 +74,7 @@ function keyPressed() {
   if (key == 'c' || key == 'C') 
     displayClusters = !displayClusters;
   else if (key == 'l' || key == 'L')
-    displayLinks = !displayLinks;
+    displayClusterLinks = !displayClusterLinks;
+  else if (key == 's' || key == 'S')
+    displaySinkLinks = !displaySinkLinks;
 }
