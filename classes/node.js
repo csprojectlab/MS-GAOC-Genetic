@@ -56,7 +56,7 @@ class Node {
     }
     if (isCH) {
       noFill();
-      stroke(0, 0, 255)
+      stroke(0, 255, 0)
       ellipse(this.position.x , this.position.y, 2*VICINITY);
 
     }

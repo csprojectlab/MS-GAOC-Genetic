@@ -62,8 +62,8 @@ function draw() {
  * Its a rectangle based on the spawn border.
  */
 function displayNetworkBorder() {
-  stroke(255);
-  strokeWeight(1);
+  stroke(0,0,255);
+  strokeWeight(2);
   noFill();
   rect(
     SPAWN_BORDER,

@@ -8,6 +8,7 @@ class Chromosome {
     this.size = network.nodes.length;
     this.genes = new Array(this.size);
     this.clusterHeadCount = 0;
+    this.fitness = 0;
     return this;
   }
 
@@ -46,10 +47,10 @@ class Chromosome {
       if (this.validGene(selectionGene[index])) {
         this.genes[selectionGene[index]] = 1;
         i++;
-        this.clusterHeadCount++;
       }
       selectionGene.splice(index, 1);
     }
+    this.clusterHeadCount = this.genes.filter(value => value == 1).length;
     return this;
   }
 
@@ -118,7 +119,7 @@ class Chromosome {
     this.genes.forEach((geneValue, index) => {
       if (geneValue) {
         // Find number of nodes in the vicinity of corresponding node to this gene value.
-        this.network.distanceMatrix[index].forEach ((d, d_index) => {
+        this.network.distanceMatrix[index].forEach((d, d_index) => {
           if (d < VICINITY && !countedNodes.includes(d_index)) {
             nodeCount++;
             countedNodes.push(d_index);
@@ -135,9 +136,9 @@ class Chromosome {
   calculateFitness() {
     let fp1 = this.calculateFP1(),
       fp2 = this.calculateFP2(),
-      fp3 = this.calculateFP3();
-    console.log(fp3);
-
-    return this;
+      fp3 = this.calculateFP3(),
+      f = VARPHI * fp1 + DELTA * fp2 + GAMMA * fp3;
+    this.fitness = 1 / f;
+    return this.fitness;
   }
 }

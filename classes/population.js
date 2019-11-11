@@ -10,6 +10,7 @@ class Population {
      * 2-D array holding the population used for selection of CH.
      */
     this.chromosomes = null;
+    this.bestChromosomeIndex = -1;
     return this;
   }
 
@@ -42,7 +43,19 @@ class Population {
    * Find the fittest network structure.
    */
   fittest() {
-    this.chromosomes.forEach(chromosome => chromosome.calculateFitness());
+    let currentFitness = this.chromosomes[0].calculateFitness(),
+      f = 0,
+      currentBestIndex = 0;
+    this.chromosomes.forEach((chromosome, index) => {
+      if (index == 0) return;
+      f = chromosome.calculateFitness();
+      if (f < currentFitness) {
+        currentFitness = f;
+        currentBestIndex = index;
+      }
+    });
+    this.bestChromosomeIndex = currentBestIndex;
+    console.log(this.chromosomes[this.bestChromosomeIndex])
     return this;
   }
 
