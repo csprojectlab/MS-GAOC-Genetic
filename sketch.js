@@ -6,9 +6,9 @@ var population, network;
 /**
  * Display Variables.
  */
-var displayClusters = true,
-  displayClusterLinks = false,
-  displaySinkLinks = false;
+var displayClusters = false,
+  displayClusterLinks = true,
+  displaySinkLinks = true;
 
 /**
  * Debugging variables.
@@ -20,7 +20,7 @@ var farthestSinkIndex = -1,
 
 function setup() {
   createCanvas(CWIDTH, CHEIGHT);
-  // frameRate(1);
+  frameRate(10);
   /**
    * Network setup:
    * - Initialize parameters
@@ -46,6 +46,10 @@ function setup() {
 function draw() {
   background(0);
   generationCount++;
+  if (generationCount == 300) {
+    alert("Network stable");
+    noLoop();
+  }
   // console.log(generationCount)
   /**
    * Display the network border in rectangular form.
