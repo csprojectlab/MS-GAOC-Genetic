@@ -32,7 +32,7 @@ class Node {
    */
   displayLink(otherNode, link_type, col) {
     stroke(col);
-    strokeWeight(0.3);
+    strokeWeight(1);
     switch (link_type) {
       case LINK.CH_LINK:
         if (!displayClusterLinks) return;
@@ -61,8 +61,8 @@ class Node {
   display(isCH) {
     noFill();
     if (isCH) fill(0, 255, 0);
-    stroke(255);
-    strokeWeight(0.4);
+    stroke(0);
+    strokeWeight(1);
     switch (this.type) {
       case NODE_TYPE.ADV:
         triangle(
@@ -84,7 +84,7 @@ class Node {
     if (isCH && displayClusters) {
       noFill();
       stroke(0, 255, 0);
-      strokeWeight(0.5)
+      strokeWeight(1)
       ellipse(this.position.x, this.position.y, 2 * VICINITY);
     }
   }

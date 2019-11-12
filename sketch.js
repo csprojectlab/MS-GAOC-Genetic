@@ -45,7 +45,11 @@ function setup() {
  * Draw loop running atleast 60 frames or times per second.
  */
 function draw() {
-  background(0);
+  background(255);
+  stroke(0);
+  strokeWeight(7);
+  noFill();
+  rect (0, 0, OWIDTH, OHEIGHT);
   generationCount++;
   if (generationCount == 300) {
     alert("Network stable");
@@ -60,7 +64,7 @@ function draw() {
   population.fittest().display();
   push();
   translate(CWIDTH, 0);
-  stroke(255);
+  stroke(0);
   strokeWeight(4);
   line(0, 0, 0, OHEIGHT);
   displayNetworkBorder();
