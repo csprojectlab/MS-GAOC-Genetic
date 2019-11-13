@@ -19,9 +19,22 @@ var farthestSinkIndex = -1,
   generationCount = 0;
 //chromosomeDisplayIndex = 0;
 
+/**
+ * Best cluster color encoding scheme
+ */
+var colors = [],
+  colorCount = 15;
+
 function setup() {
   createCanvas(OWIDTH, OHEIGHT);
   frameRate(10);
+  /**
+   * Randomly setting the color scheme.
+   */
+  for (let i = 0; i < colorCount; i++)
+    colors.push(
+      color(floor(random(255)), floor(random(255)), floor(random(255)))
+    );
   /**
    * Network setup:
    * - Initialize parameters
@@ -49,7 +62,7 @@ function draw() {
   stroke(0);
   strokeWeight(7);
   noFill();
-  rect (0, 0, OWIDTH, OHEIGHT);
+  rect(0, 0, OWIDTH, OHEIGHT);
   generationCount++;
   if (generationCount == 300) {
     alert("Network stable");
@@ -100,10 +113,9 @@ function keyPressed() {
     pause = !pause;
     if (pause) noLoop();
     else loop();
-  } 
+  }
 }
 
+// TODO(Aridaman): Create a cluster class
 // TODO(Aridaman): Start working on clusters and energy dissipation in respective branch
-// TODO(Aridaman): Create a cluster class 
 // TODO(Aridaman): Display the best network as cluster class
-
