@@ -1,7 +1,10 @@
 /**
  * Network running variables.
  */
-var population, network;
+var population,
+  network,
+  dissipationModel,
+  evolving = true;
 
 /**
  * Display Variables.
@@ -27,7 +30,7 @@ var colors = [],
 
 function setup() {
   createCanvas(OWIDTH, OHEIGHT);
-  frameRate(10);
+  // frameRate(10);
   /**
    * Randomly setting the color scheme.
    */
@@ -51,7 +54,9 @@ function setup() {
 
   population = new Population(network, POPULATION_SIZE, true)
     .boot()
-    .generateChromosomePopulation().fittest().generateClusters();//.evolve();
+    .generateChromosomePopulation();
+  // .fittest()
+  // .generateClusters(); //.evolve();
 }
 
 /**
@@ -63,32 +68,43 @@ function draw() {
   strokeWeight(7);
   noFill();
   rect(0, 0, OWIDTH, OHEIGHT);
-  generationCount++;
-  if (generationCount == 300) {
+  
+  if (generationCount == GENERATIONS) {
     alert("Network stable");
-    // noLoop();
+    evolving = false;
+    generationCount = 0;
   }
-  // console.log(generationCount)
   /**
    * Display the network border in rectangular form.
    * Required for MS-GAOC.
    */
   displayNetworkBorder();
-  population.fittest().generateClusters().displayAll();
-  // population.display();
-
+  if (evolving) {
+    generationCount++;
+    population.fittest().generateClusters();
+  }
+  /**
+   * Display the best network structure.
+   */
   push();
-
   translate(CWIDTH, 0);
   stroke(0);
   strokeWeight(4);
   line(0, 0, 0, OHEIGHT);
   displayNetworkBorder();
   population.display();
-
   pop();
 
-  // population.evolve();
+  /**
+   * Display all network structures being evaluated.
+   */
+  if (evolving) {
+    push();
+    translate(0, 0);
+    population.displayAll();
+    pop();
+    population.evolve();
+  }
 }
 
 /**

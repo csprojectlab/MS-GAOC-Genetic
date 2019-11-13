@@ -13,6 +13,7 @@ const LINK = {
 };
 
 const POPULATION_SIZE = 30,
+  GENERATIONS = 100,
   VICINITY = 80,
   VARPHI = 0.3,
   DELTA = 0.3,
@@ -40,5 +41,5 @@ const OWIDTH = 1100,
    */
   E_INITIAL_ENERGY = 0.5,
   E_ELC = 50 * 0.000000001, // Energy required for running transmitter and receiver
-  E_EFS = 10 * 0.000000000001,  // Amplification energy required for smaller distance
-  E_AMP = 0.0013 * 0.000000000001;  // Amplification energy required for larger distance
+  E_EFS = 10 * 0.000000000001, // Amplification energy required for smaller distance
+  E_AMP = 0.0013 * 0.000000000001; // Amplification energy required for larger distance
