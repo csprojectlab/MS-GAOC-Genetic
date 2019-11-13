@@ -71,6 +71,7 @@ class Population {
     let bestChromosome = this.chromosomes[this.bestChromosomeIndex],
       clusterHeadIndices = [],
       i = -1;
+    this.bestNetworkClusters = [];
     /**
      * Create clusters based on the genes of the best cluster.
      * Pushing the index of the cluster head.
@@ -81,7 +82,14 @@ class Population {
         this.bestNetworkClusters.push(new Cluster(this.network, index));
         clusterHeadIndices.push(index); // Saving the cluster head index.
       }
-    });    
+    });
+    /**
+     * Add respective sinks to the clusters.
+     **/
+    this.bestNetworkClusters.forEach (cluster => {
+      i = this.network.closestSinkIndex(cluster.chIndex);
+      cluster.setSink(i);
+    })
     /**
      * Adding nodes to their respective clusters.
      */
@@ -96,7 +104,7 @@ class Population {
           cluster => cluster.chIndex == i
         )[0];
         /**
-         * Add this node to the cluster. 
+         * Add this node to the cluster.
          */
         clusterHead.addNode(index);
       }
@@ -172,9 +180,15 @@ class Population {
   /**
    * Display function.
    * - Display the best network structure.
+   * - The display doesnot need genes because cluster already has the required information
    */
   display() {
-    this.network.display(this.chromosomes[this.bestChromosomeIndex].genes);
+    let colorIndex = 0;
+    this.bestNetworkClusters.forEach(cluster => {
+      cluster.display(colors[colorIndex]);
+      colorIndex = (colorIndex + 1) % colorCount;
+    });
+    // this.network.display(this.chromosomes[this.bestChromosomeIndex].genes);
     return this;
   }
 

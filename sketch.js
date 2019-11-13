@@ -33,7 +33,7 @@ function setup() {
    */
   for (let i = 0; i < colorCount; i++)
     colors.push(
-      color(floor(random(255)), floor(random(255)), floor(random(255)))
+      color(floor(random(100)), floor(random(255)), floor(random(100)))
     );
   /**
    * Network setup:
@@ -51,7 +51,7 @@ function setup() {
 
   population = new Population(network, POPULATION_SIZE, true)
     .boot()
-    .generateChromosomePopulation().fittest().generateClusters();//.evolve();
+    .generateChromosomePopulation()//.fittest().generateClusters();//.evolve();
 }
 
 /**
@@ -74,8 +74,8 @@ function draw() {
    * Required for MS-GAOC.
    */
   displayNetworkBorder();
-  // population.fittest().display();
-  population.display();
+  population.fittest().generateClusters().displayAll();
+  // population.display();
 
   push();
 
@@ -84,11 +84,11 @@ function draw() {
   strokeWeight(4);
   line(0, 0, 0, OHEIGHT);
   displayNetworkBorder();
-  population.displayAll();
+  population.display();
 
   pop();
 
-  // population.evolve();
+  population.evolve();
 }
 
 /**

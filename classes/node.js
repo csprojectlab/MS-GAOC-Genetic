@@ -58,9 +58,9 @@ class Node {
   /**
    * Display function based on type of node.
    */
-  display(isCH) {
+  display(isCH, col = color(0, 255, 0)) {
     noFill();
-    if (isCH) fill(0, 255, 0);
+    if (isCH) fill(col);
     stroke(0);
     strokeWeight(1);
     switch (this.type) {
@@ -83,8 +83,8 @@ class Node {
     }
     if (isCH && displayClusters) {
       noFill();
-      stroke(0, 255, 0);
-      strokeWeight(1)
+      stroke(col);
+      strokeWeight(1);
       ellipse(this.position.x, this.position.y, 2 * VICINITY);
     }
   }
