@@ -58,11 +58,11 @@ class Node {
   /**
    * Display function based on type of node.
    */
-  display(isCH, col = color(0, 255, 0)) {
+  display(isCH, col = color(0, 255, 0), stroke_weight = 0.3) {
     noFill();
     if (isCH) fill(col);
     stroke(0);
-    strokeWeight(1);
+    strokeWeight(stroke_weight);
     switch (this.type) {
       case NODE_TYPE.ADV:
         triangle(
@@ -84,7 +84,7 @@ class Node {
     if (isCH && displayClusters) {
       noFill();
       stroke(col);
-      strokeWeight(1);
+      strokeWeight(stroke_weight);
       ellipse(this.position.x, this.position.y, 2 * VICINITY);
     }
   }

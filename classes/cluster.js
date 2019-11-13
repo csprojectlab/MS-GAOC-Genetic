@@ -39,12 +39,12 @@ class Cluster {
     /**
      * Display the cluster head.
      */
-    this.network.nodes[this.chIndex].display(1, col);
+    this.network.nodes[this.chIndex].display(1, col, 1);
     /**
      * Display the nodes and CH links with specified color.
      */
     this.nodes.forEach(node_index => {
-      this.network.nodes[node_index].display(0, col);
+      this.network.nodes[node_index].display(0, col, 1);
       this.network.nodes[node_index].displayLink(
         this.network.nodes[this.chIndex],
         LINK.CH_LINK,

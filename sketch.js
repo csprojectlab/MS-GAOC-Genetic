@@ -33,7 +33,7 @@ function setup() {
    */
   for (let i = 0; i < colorCount; i++)
     colors.push(
-      color(floor(random(100)), floor(random(255)), floor(random(100)))
+      color(floor(random(100)), floor(random(255)), floor(random(200)))
     );
   /**
    * Network setup:
