@@ -17,6 +17,7 @@ class Node {
         break;
     }
     this.residualEnergy = this.eMax;
+    this.dead = false;
   }
 
   /**

@@ -27,9 +27,18 @@ const OWIDTH = 1100,
   SPAWN_BORDER = 70,
   NUMBER_OF_NODES = 100,
   NUMBER_OF_CH = 4,
-  NUMBER_OF_SINKS = 1,
+  NUMBER_OF_SINKS = 4,
+  /**
+   * Fractions
+   */
   INTERMEDIATE_NODE_FRACTION = 0.1,
   ADVANCED_NODE_FRACTION = 0.2,
   ENERGY_FRACTION_ADVANCED_ALPHA = 2,
   ENERGY_FRACTION_INTERMEDIATE_BETA = 1,
-  E_INITIAL_ENERGY = 0.5;
+  /**
+   * Energy
+   */
+  E_INITIAL_ENERGY = 0.5,
+  E_ELC = 50 * 0.000000001, // Energy required for running transmitter and receiver
+  E_EFS = 10 * 0.000000000001,  // Amplification energy required for smaller distance
+  E_AMP = 0.0013 * 0.000000000001;  // Amplification energy required for larger distance

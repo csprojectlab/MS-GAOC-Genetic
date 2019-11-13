@@ -121,6 +121,4 @@ function keyPressed() {
   }
 }
 
-// TODO(Aridaman): Create a cluster class
 // TODO(Aridaman): Start working on clusters and energy dissipation in respective branch
-// TODO(Aridaman): Display the best network as cluster class
