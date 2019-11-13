@@ -42,6 +42,14 @@ class Node {
   }
 
   /**
+   * Function receiving packets. 
+   */
+  receivePacket (bits) {
+    let energyConsumed = bits * E_ELC;
+    this.residualEnergy -= energyConsumed;
+  }
+
+  /**
    * Function to check if node is dead or not. 
    */
   isDead () {
