@@ -51,7 +51,7 @@ function setup() {
 
   population = new Population(network, POPULATION_SIZE, true)
     .boot()
-    .generateChromosomePopulation()//.fittest().generateClusters();//.evolve();
+    .generateChromosomePopulation().fittest().generateClusters();//.evolve();
 }
 
 /**
@@ -88,7 +88,7 @@ function draw() {
 
   pop();
 
-  population.evolve();
+  // population.evolve();
 }
 
 /**
@@ -96,7 +96,7 @@ function draw() {
  * Its a rectangle based on the spawn border.
  */
 function displayNetworkBorder() {
-  stroke(0, 0, 255);
+  stroke(0, 255, 0);
   strokeWeight(2);
   noFill();
   rect(
@@ -122,3 +122,4 @@ function keyPressed() {
 }
 
 // TODO(Aridaman): Start working on clusters and energy dissipation in respective branch
+// TODO(Aridaman): Change the selection method to rank selection
