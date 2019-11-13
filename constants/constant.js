@@ -43,3 +43,5 @@ const OWIDTH = 1100,
   E_ELC = 50 * 0.000000001, // Energy required for running transmitter and receiver
   E_EFS = 10 * 0.000000000001, // Amplification energy required for smaller distance
   E_AMP = 0.0013 * 0.000000000001; // Amplification energy required for larger distance
+  D_O = Math.sqrt(E_EFS / E_AMP);
+  PACKET_SIZE = 2000;

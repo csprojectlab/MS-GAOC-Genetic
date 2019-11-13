@@ -60,4 +60,31 @@ class Cluster {
       col
     );
   }
+
+  /**
+   * Function to display energy dissipation.
+   * Display the links of transmitting nodes with CH and CH with the sink.
+   */
+  displayEnergyDissipation(transmitting_nodes, col = color(255, 255, 0)) {
+    /**
+     * Display the sinks.
+     */
+    this.network.sinks.forEach(sink => sink.display());
+    /**
+     * Display the cluster head.
+     */
+    this.network.nodes[this.chIndex].display(1, col, 1);
+    /**
+     * Display cluster nodes and transmission links.
+     */
+    this.nodes.forEach(node_index => {
+      this.network.nodes[node_index].display(0, col, 1);
+      if (transmitting_nodes.includes(node_index))
+        this.network.nodes[node_index].displayLink(
+          this.network.nodes[this.chIndex],
+          LINK.CH_LINK,
+          col
+        );
+    });
+  }
 }

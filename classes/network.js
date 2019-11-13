@@ -32,6 +32,42 @@ class Network {
   }
 
   /**
+   * Function to calculate the energy fraction.
+   * Works for all three types of nodes.
+   */
+  calculateEnergyFraction(node_type) {
+    let totalResidualEnergy = 0,
+      nodesEnergy = 0; // Energy sum of given node type.
+    // Sum up all the energy.
+    this.nodes.forEach(node => {
+      if (!node.dead) {
+        totalResidualEnergy += node.residualEnergy;
+        if (node.type == node_type) nodesEnergy += node.residualEnergy;
+      }
+    });
+    let x = nodesEnergy / totalResidualEnergy;
+    // console.log(x)
+    return x;
+  }
+
+  /**
+   * Function to calculate the node fraction.
+   */
+  calcualteNodeFraction(node_type) {
+    let totalNodes = 0,
+      nodes = 0;
+    this.nodes.forEach(node => {
+      if (!node.dead) {
+        totalNodes += 1;
+        if (node.type == node_type) nodes += 1;
+      }
+    });
+    let x = nodes / totalNodes;
+    // console.log(x);
+    return x;
+  }
+
+  /**
    * Network parameters responsible for network performance are initialized.
    */
   initializeNetworkParameters() {
@@ -43,31 +79,25 @@ class Network {
     this.normalNodes =
       NUMBER_OF_NODES *
       (1 - ADVANCED_NODE_FRACTION - INTERMEDIATE_NODE_FRACTION);
+    return this;
+  }
 
-    /**
-     * Energy of each type of node.
-     */
+  /**
+   * Initialize the energy parameters.
+   */
+  calculateEnergy() {
     this.eAdvanced =
-      E_INITIAL_ENERGY *
-      (1 + ENERGY_FRACTION_ADVANCED_ALPHA) *
-      NUMBER_OF_NODES *
-      ADVANCED_NODE_FRACTION;
+      (1 + this.calculateEnergyFraction(NODE_TYPE.ADV)) *
+      this.calcualteNodeFraction(NODE_TYPE.ADV);
     this.eIntermediate =
-      E_INITIAL_ENERGY *
-      (1 + ENERGY_FRACTION_INTERMEDIATE_BETA) *
-      NUMBER_OF_NODES *
-      INTERMEDIATE_NODE_FRACTION;
+      (1 + this.calculateEnergyFraction(NODE_TYPE.INT)) *
+      this.calcualteNodeFraction(NODE_TYPE.INT);
     this.eNormal =
-      E_INITIAL_ENERGY *
-      (1 - ADVANCED_NODE_FRACTION - INTERMEDIATE_NODE_FRACTION) *
-      NUMBER_OF_NODES;
+      (1 + this.calculateEnergyFraction(NODE_TYPE.NRM)) *
+      this.calcualteNodeFraction(NODE_TYPE.NRM);
 
     this.networkEnergy =
-      NUMBER_OF_NODES *
-      E_INITIAL_ENERGY *
-      (1 +
-        ENERGY_FRACTION_INTERMEDIATE_BETA * INTERMEDIATE_NODE_FRACTION +
-        ADVANCED_NODE_FRACTION * ENERGY_FRACTION_ADVANCED_ALPHA);
+      (this.eAdvanced + this.eIntermediate + this.eNormal) * NUMBER_OF_NODES;
     console.log("Network Energy ET: ", this.networkEnergy);
     return this;
   }
@@ -246,9 +276,13 @@ class Network {
     });
 
     // Display link between CH and sink
-    clusterHeadIndices.forEach (ch_index => {
+    clusterHeadIndices.forEach(ch_index => {
       i = this.closestSinkIndex(ch_index);
-      this.nodes[ch_index].displayLink(this.sinks[i], LINK.SINK_LINK, color(0, 255, 255));
+      this.nodes[ch_index].displayLink(
+        this.sinks[i],
+        LINK.SINK_LINK,
+        color(0, 255, 255)
+      );
     });
   }
 }

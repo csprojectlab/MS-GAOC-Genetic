@@ -39,7 +39,13 @@ class EnergyDissipation {
    * Simulation function for Dissipating data
    * - Clusters should be added before dissipating energy
    */
-  dissipateData() {}
+  dissipateData() {
+    // Select clusters for dissipation
+    // Choose the nodes within cluster for sending data
+    this.network.nodes.forEach(node => {
+      node.transmitPacket(PACKET_SIZE, 80);
+    })
+  }
 
   /**
    * Function to mark node as dead node.

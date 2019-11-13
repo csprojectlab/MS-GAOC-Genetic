@@ -29,6 +29,27 @@ class Node {
   }
 
   /**
+   * Transmission and receving energy dissipation
+   */
+  transmitPacket(bits, d) {
+    let energyConsumed = 0;
+    if (d < D_O) {
+      energyConsumed = bits * E_ELC + bits * E_EFS * Math.pow(d, 2);
+    } else {
+      energyConsumed = bits * E_ELC + bits * E_AMP * Math.pow(d, 4);
+    }
+    // console.log(energyConsumed);
+    this.residualEnergy -= energyConsumed;
+  }
+
+  /**
+   * Function to check if node is dead or not. 
+   */
+  isDead () {
+    return this.residualEnergy <= 0;
+  }
+
+  /**
    * Display the link with another node.
    */
   displayLink(otherNode, link_type, col) {

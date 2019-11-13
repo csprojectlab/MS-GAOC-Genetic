@@ -3,7 +3,7 @@
  */
 var population,
   network,
-  dissipationModel,
+  dissipationModel = undefined,
   evolving = true;
 
 /**
@@ -48,6 +48,7 @@ function setup() {
   network = new Network()
     .initializeNetworkParameters()
     .generateHeterogenousNodes()
+    .calculateEnergy()
     .generateSinks()
     .calculateDistanceBetweenNodes()
     .calculateDistanceBetweenNodeAndSink();
@@ -55,8 +56,6 @@ function setup() {
   population = new Population(network, POPULATION_SIZE, true)
     .boot()
     .generateChromosomePopulation();
-  // .fittest()
-  // .generateClusters(); //.evolve();
 }
 
 /**
@@ -68,7 +67,7 @@ function draw() {
   strokeWeight(7);
   noFill();
   rect(0, 0, OWIDTH, OHEIGHT);
-  
+
   if (generationCount == GENERATIONS) {
     alert("Network stable");
     evolving = false;
@@ -96,7 +95,7 @@ function draw() {
   pop();
 
   /**
-   * Display all network structures being evaluated.
+   * Display all network structures being evaluated and evole the network.
    */
   if (evolving) {
     push();
@@ -104,6 +103,18 @@ function draw() {
     population.displayAll();
     pop();
     population.evolve();
+  } else {
+    /**
+     * Not evolving then dissipate energy.
+     */
+    if (dissipationModel == undefined) {
+      dissipationModel = new EnergyDissipation(network)
+        .addClusters(population.bestNetworkClusters)
+        .setThreshold(1);
+    }
+    dissipationModel.dissipateData();
+    // console.log(dissipationModel)
+    // noLoop();
   }
 }
 
