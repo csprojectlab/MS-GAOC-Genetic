@@ -100,5 +100,10 @@ function keyPressed() {
     pause = !pause;
     if (pause) noLoop();
     else loop();
-  }
+  } 
 }
+// TODO(Aridaman): Create two branches and make this branch as master
+// TODO(Aridaman): Start working on clusters and energy dissipation in respective branch
+// TODO(Aridaman): Create a cluster class 
+// TODO(Aridaman): Display the best network as cluster class
+
