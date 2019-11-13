@@ -97,25 +97,25 @@ function draw() {
   /**
    * Display all network structures being evaluated and evole the network.
    */
+  push();
+  translate(0, 0);
   if (evolving) {
-    push();
-    translate(0, 0);
     population.displayAll();
-    pop();
     population.evolve();
   } else {
     /**
      * Not evolving then dissipate energy.
      */
     if (dissipationModel == undefined) {
-      dissipationModel = new EnergyDissipation(network)
+      dissipationModel = new EnergyDissipation()
         .addClusters(population.bestNetworkClusters)
         .setThreshold(1);
     }
-    dissipationModel.dissipateData();
+    dissipationModel.dissipateData().displayEnergyDissipation();
     // console.log(dissipationModel)
     // noLoop();
   }
+  pop();
 }
 
 /**

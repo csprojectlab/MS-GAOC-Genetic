@@ -29,6 +29,15 @@ class Cluster {
   }
 
   /**
+   * Transmission and receving energy dissipation
+   */
+  transmitPacketFrom(node_index, bits) {
+    let d = this.network.distanceMatrix[node_index][this.chIndex]; // Distance between node and CH
+    this.network.nodes[node_index].transmitPacket(bits, d);
+    return this;
+  }
+
+  /**
    * Display the cluster.
    */
   display(col) {
@@ -86,5 +95,14 @@ class Cluster {
           col
         );
     });
+    /**
+     * Display link between CH and sink.
+     */
+    this.network.nodes[this.chIndex].displayLink(
+      this.network.sinks[this.sinkIndex],
+      LINK.SINK_LINK,
+      col
+    );
+    return this;
   }
 }

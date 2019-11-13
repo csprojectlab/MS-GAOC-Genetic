@@ -26,10 +26,10 @@ class Node {
   energyFactor() {
     let eFactor = this.residualEnergy / this.eMax;
     return eFactor;
-  }
+  }  
 
   /**
-   * Transmission and receving energy dissipation
+   * Function to transmit packet. 
    */
   transmitPacket(bits, d) {
     let energyConsumed = 0;
@@ -38,7 +38,6 @@ class Node {
     } else {
       energyConsumed = bits * E_ELC + bits * E_AMP * Math.pow(d, 4);
     }
-    // console.log(energyConsumed);
     this.residualEnergy -= energyConsumed;
   }
 

@@ -5,10 +5,6 @@
 class EnergyDissipation {
   constructor(network) {
     /**
-     * Network to operate on.
-     */
-    this.network = network;
-    /**
      * Clusters of the network.
      */
     this.clusters = null;
@@ -16,6 +12,10 @@ class EnergyDissipation {
      * If this threshold is reached then stop dissipating energy.
      */
     this.threshold = null;
+    /**
+     * Selected nodes for transmission per round. 
+     */
+    this.transmittingNodes = [];
     return this;
   }
 
@@ -40,17 +40,36 @@ class EnergyDissipation {
    * - Clusters should be added before dissipating energy
    */
   dissipateData() {
+    this.transmittingNodes = [];
+    let temp;
     // Select clusters for dissipation
-    // Choose the nodes within cluster for sending data
-    this.network.nodes.forEach(node => {
-      node.transmitPacket(PACKET_SIZE, 80);
-    })
+    this.clusters.forEach(cluster => {
+      if (random(1) < 0.7) {
+        // Cluster selected for dissipation.
+        temp = [];
+        cluster.nodes.forEach (node_index => {
+          if (random(1) < 0.3) {
+            // Node selected for transmission. 
+            temp.push(node_index);
+            cluster.transmitPacketFrom(node_index, PACKET_SIZE)
+          }
+        })
+        this.transmittingNodes.push(temp);
+      } else {
+        this.transmittingNodes.push([]);      // Cluster not selected. 
+      }
+    });
+    return this;
   }
 
   /**
-   * Function to mark node as dead node.
+   * Display transmitting nodes. 
    */
-  setDead(node_index) {
-    this.network.nodes[node_index].dead = true;
+  displayEnergyDissipation() {
+    let colorIndex = 0;
+    this.clusters.forEach ((cluster, index) => {
+      cluster.displayEnergyDissipation(this.transmittingNodes[index], colors[colorIndex]);
+      colorIndex = (colorIndex + 1) % colorCount;
+    })
   }
 }
