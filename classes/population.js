@@ -12,6 +12,10 @@ class Population {
      */
     this.chromosomes = null;
     this.bestChromosomeIndex = -1;
+    /**
+     * Holds the clusters of the best network selected by GA.
+     */
+    this.bestNetworkClusters = [];
     return this;
   }
 
@@ -56,6 +60,47 @@ class Population {
       }
     });
     this.bestChromosomeIndex = currentBestIndex;
+    return this;
+  }
+
+  /**
+   * Generate clusters of the best network structure.
+   * This function should be called after the fittest function is called.
+   */
+  generateClusters() {
+    let bestChromosome = this.chromosomes[this.bestChromosomeIndex],
+      clusterHeadIndices = [],
+      i = -1;
+    /**
+     * Create clusters based on the genes of the best cluster.
+     * Pushing the index of the cluster head.
+     */
+    bestChromosome.genes.forEach((gene, index) => {
+      if (gene) {
+        // If gene is 1 => chosen as cluster head.
+        this.bestNetworkClusters.push(new Cluster(this.network, index));
+        clusterHeadIndices.push(index); // Saving the cluster head index.
+      }
+    });    
+    /**
+     * Adding nodes to their respective clusters.
+     */
+    this.network.nodes.forEach((_, index) => {
+      // Find the cluster head of this node.
+      i = this.network.closestClusterHead(index, clusterHeadIndices);
+      if (i == -1) {
+        // FIXME(Aridaman): Don't know what to do here
+      } else {
+        // Filter the cluster head with this index i.
+        let clusterHead = this.bestNetworkClusters.filter(
+          cluster => cluster.chIndex == i
+        )[0];
+        /**
+         * Add this node to the cluster. 
+         */
+        clusterHead.addNode(index);
+      }
+    });
     return this;
   }
 
@@ -107,7 +152,7 @@ class Population {
         parentB = this.chromosomes[
           matingPool[floor(random(matingPool.length))]
         ];
-        childChromosome = parentA.crossover(parentB);   // returns a valid chromosome network
+        childChromosome = parentA.crossover(parentB); // returns a valid chromosome network
         if (childChromosome) {
           childChromosome.mutate(MUTATION_RATE);
           newChromosomes.push(childChromosome);
@@ -125,8 +170,8 @@ class Population {
   }
 
   /**
-   * Display function. 
-   * - Display the best network structure. 
+   * Display function.
+   * - Display the best network structure.
    */
   display() {
     this.network.display(this.chromosomes[this.bestChromosomeIndex].genes);
@@ -134,11 +179,11 @@ class Population {
   }
 
   /**
-   * Display all 
+   * Display all
    */
   displayAll() {
-    this.chromosomes.forEach (chromosome => {
+    this.chromosomes.forEach(chromosome => {
       this.network.display(chromosome.genes);
-    })
+    });
   }
 }

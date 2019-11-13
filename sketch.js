@@ -51,7 +51,7 @@ function setup() {
 
   population = new Population(network, POPULATION_SIZE, true)
     .boot()
-    .generateChromosomePopulation(); //.fittest()//.evolve();
+    .generateChromosomePopulation().fittest().generateClusters();//.evolve();
 }
 
 /**
@@ -74,16 +74,21 @@ function draw() {
    * Required for MS-GAOC.
    */
   displayNetworkBorder();
-  population.fittest().display();
+  // population.fittest().display();
+  population.display();
+
   push();
+
   translate(CWIDTH, 0);
   stroke(0);
   strokeWeight(4);
   line(0, 0, 0, OHEIGHT);
   displayNetworkBorder();
   population.displayAll();
+
   pop();
-  population.evolve();
+
+  // population.evolve();
 }
 
 /**

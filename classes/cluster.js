@@ -7,6 +7,7 @@ class Cluster {
         this.network = network;
         this.chIndex = ch_index;
         this.nodes = nodes;
+        return this;
     }
 
     /**
@@ -15,12 +16,13 @@ class Cluster {
      */
     addNode (node_index) {
         this.nodes.push(node_index);
+        return this;
     }
 
     /**
      * Display the cluster. 
      */
     display () {
-        
+
     }
 }
