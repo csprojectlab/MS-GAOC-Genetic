@@ -19,7 +19,8 @@ var displayClusters = false,
  */
 var farthestSinkIndex = -1,
   nodeIndex = -1,
-  generationCount = 0;
+  generationCount = 0,
+  clusters = null;
 //chromosomeDisplayIndex = 0;
 
 /**
@@ -72,9 +73,9 @@ function draw() {
   rect(0, 0, OWIDTH, OHEIGHT);
   // console.log(generationCount)
   if (generationCount == GENERATIONS) {
-    alert("Network stable");
-    // evolving = false;
-    // generationCount = 0;
+    evolving = false;
+    // alert("Network stable");
+    generationCount = 0;
   }
   /**
    * Display the network border in rectangular form.
@@ -90,6 +91,9 @@ function draw() {
    */
   push();
   translate(CWIDTH, 0);
+  textSize(16);
+  stroke(255, 0, 0);
+  text("BEST NETWORK STRUCTURE", 10, 20);
   stroke(0);
   strokeWeight(4);
   line(0, 0, 0, OHEIGHT);
@@ -103,9 +107,15 @@ function draw() {
   push();
   translate(0, 0);
   if (evolving) {
+    textSize(16);
+    stroke(255, 0, 0);
+    text("EVOLVING NETWORK", 10, 20);
     population.displayAll();
     population.evolve();
   } else {
+    textSize(16);
+    stroke(255, 0, 0);
+    text("NETWORK NODES DISSIPATING ENERGY", 10, 20);
     /**
      * Not evolving then dissipate energy.
      */
@@ -117,7 +127,8 @@ function draw() {
     dissipationModel.dissipateData().displayEnergyDissipation();
     if (dissipationModel.stopDissipation) {
       console.log("Cluster head dead");
-      dissipationModel == undefined; // Will be initialized with new clusters next time.
+      // alert("cluster head dead");
+      dissipationModel = undefined; // Will be initialized with new clusters next time.
       evolving = true; // Start evolving the structure again.
       population = new Population(network, POPULATION_SIZE, true)
         .boot()

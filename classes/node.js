@@ -26,10 +26,10 @@ class Node {
   energyFactor() {
     let eFactor = this.residualEnergy / this.eMax;
     return eFactor;
-  }  
+  }
 
   /**
-   * Function to transmit packet. 
+   * Function to transmit packet.
    */
   transmitPacket(bits, d) {
     let energyConsumed = 0;
@@ -42,24 +42,24 @@ class Node {
   }
 
   /**
-   * Function receiving packets. 
+   * Function receiving packets.
    */
-  receivePacket (bits) {
+  receivePacket(bits) {
     let energyConsumed = bits * E_ELC;
     this.residualEnergy -= energyConsumed;
   }
 
   /**
-   * Function to check if node is dead or not. 
+   * Function to check if node is dead or not.
    */
-  energyFinished () {
+  energyFinished() {
     return this.residualEnergy <= 0;
   }
 
   /**
-   * Function to set node as dead. 
+   * Function to set node as dead.
    */
-  setDead () {
+  setDead() {
     this.residualEnergy = 0;
     this.dead = true;
   }
@@ -68,8 +68,7 @@ class Node {
    * Display the link with another node.
    */
   displayLink(otherNode, link_type, col) {
-    if (this.dead)
-      return;
+    if (this.dead) return;
     stroke(col);
     strokeWeight(1);
     switch (link_type) {
@@ -100,10 +99,10 @@ class Node {
   display(isCH, col = color(0, 255, 0), stroke_weight = 0.3) {
     noFill();
     if (isCH) fill(col);
-    if (this.dead)  {
+    if (this.dead) {
       fill(0);
-      ellipse(this.position.x, this.position.y, 3, 3)
-      return;
+      // ellipse(this.position.x, this.position.y, 3, 3)
+      // return;
     }
     stroke(0);
     strokeWeight(stroke_weight);

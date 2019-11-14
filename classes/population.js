@@ -86,14 +86,15 @@ class Population {
     /**
      * Add respective sinks to the clusters.
      **/
-    this.bestNetworkClusters.forEach (cluster => {
+    this.bestNetworkClusters.forEach(cluster => {
       i = this.network.closestSinkIndex(cluster.chIndex);
       cluster.setSink(i);
-    })
+    });
     /**
      * Adding nodes to their respective clusters.
      */
-    this.network.nodes.forEach((_, index) => {
+    this.network.nodes.forEach((node, index) => {
+      // if (node.dead) return;
       // Find the cluster head of this node.
       i = this.network.closestClusterHead(index, clusterHeadIndices);
       if (i == -1) {
