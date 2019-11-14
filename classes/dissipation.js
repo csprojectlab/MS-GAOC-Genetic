@@ -3,9 +3,10 @@
  * If node's energy is finished this model marks the node as dead node.
  */
 class EnergyDissipation {
-  constructor(network) {
+  constructor() {
     /**
      * Clusters of the network.
+     * All the nodes in this cluster will be alive.
      */
     this.clusters = null;
     /**
@@ -13,9 +14,13 @@ class EnergyDissipation {
      */
     this.threshold = null;
     /**
-     * Selected nodes for transmission per round. 
+     * Selected nodes for transmission per round.
      */
     this.transmittingNodes = [];
+    /**
+     * Counting the rounds.
+     */
+    this.round = 0;
     return this;
   }
 
@@ -40,6 +45,7 @@ class EnergyDissipation {
    * - Clusters should be added before dissipating energy
    */
   dissipateData() {
+    this.round++;
     this.transmittingNodes = [];
     let temp;
     // Select clusters for dissipation
@@ -47,29 +53,34 @@ class EnergyDissipation {
       if (random(1) < 0.7) {
         // Cluster selected for dissipation.
         temp = [];
-        cluster.nodes.forEach (node_index => {
-          if (random(1) < 0.3) {
-            // Node selected for transmission. 
+        cluster.nodes.forEach(node_index => {
+          if (random(1) < 0.3 && !cluster.isDead(node_index)) {
+            // Alive node selected for transmission.
             temp.push(node_index);
-            cluster.transmitPacketFrom(node_index, PACKET_SIZE)
+            cluster
+              .transmitPacketFrom(node_index, PACKET_SIZE)
+              .updateClusterStatus(node_index);
           }
-        })
+        });
         this.transmittingNodes.push(temp);
       } else {
-        this.transmittingNodes.push([]);      // Cluster not selected. 
+        this.transmittingNodes.push([]); // Cluster not selected.
       }
     });
     return this;
   }
 
   /**
-   * Display transmitting nodes. 
+   * Display transmitting nodes.
    */
   displayEnergyDissipation() {
     let colorIndex = 0;
-    this.clusters.forEach ((cluster, index) => {
-      cluster.displayEnergyDissipation(this.transmittingNodes[index], colors[colorIndex]);
+    this.clusters.forEach((cluster, index) => {
+      cluster.displayEnergyDissipation(
+        this.transmittingNodes[index],
+        colors[colorIndex]
+      );
       colorIndex = (colorIndex + 1) % colorCount;
-    })
+    });
   }
 }

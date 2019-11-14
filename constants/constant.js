@@ -43,5 +43,20 @@ const OWIDTH = 1100,
   E_ELC = 50 * 0.000000001, // Energy required for running transmitter and receiver
   E_EFS = 10 * 0.000000000001, // Amplification energy required for smaller distance
   E_AMP = 0.0013 * 0.000000000001; // Amplification energy required for larger distance
-  D_O = Math.sqrt(E_EFS / E_AMP);
-  PACKET_SIZE = 2000;
+D_O = Math.sqrt(E_EFS / E_AMP);
+PACKET_SIZE = 2000;
+
+const COLOR_CODES = [
+  [9, 13, 237],
+  [237, 9, 192],
+  [237, 9, 51],
+  [237, 82, 9],
+  [237, 165, 9],
+  [188, 237, 9],
+  [89, 237, 9],
+  [9, 237, 135],
+  [22, 224, 208],
+  [44, 65, 99],
+  [77, 72, 105],
+  [195, 0, 255]
+];

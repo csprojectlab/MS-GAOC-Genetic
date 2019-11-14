@@ -52,14 +52,24 @@ class Node {
   /**
    * Function to check if node is dead or not. 
    */
-  isDead () {
+  energyFinished () {
     return this.residualEnergy <= 0;
+  }
+
+  /**
+   * Function to set node as dead. 
+   */
+  setDead () {
+    this.residualEnergy = 0;
+    this.dead = true;
   }
 
   /**
    * Display the link with another node.
    */
   displayLink(otherNode, link_type, col) {
+    if (this.dead)
+      return;
     stroke(col);
     strokeWeight(1);
     switch (link_type) {
@@ -90,8 +100,10 @@ class Node {
   display(isCH, col = color(0, 255, 0), stroke_weight = 0.3) {
     noFill();
     if (isCH) fill(col);
+    if (this.dead)  fill(255, 255, 0);
     stroke(0);
     strokeWeight(stroke_weight);
+
     switch (this.type) {
       case NODE_TYPE.ADV:
         triangle(

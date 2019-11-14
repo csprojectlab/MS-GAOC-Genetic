@@ -41,6 +41,40 @@ class Cluster {
   }
 
   /**
+   * Update the status of CH and network with respect to the parameter node. 
+   */
+  updateClusterStatus(node_index) {
+    if (this.energyFinished(this.chIndex)) {
+      this.setDead(this.chIndex);
+    }
+    if (this.energyFinished(node_index)) {
+      this.setDead(node_index)
+    }
+    return this;
+  }
+
+  /**
+   * Checking for dead node.
+   */
+  energyFinished(node_index) {
+    return this.network.nodes[node_index].energyFinished();
+  }
+
+  /**
+   * Function to set node as dead.
+   */
+  setDead(node_index) {
+    this.network.nodes[node_index].setDead();
+  }
+
+  /**
+   * Function returning whether node is dead or not.
+   */
+  isDead(node_index) {
+    return this.network.nodes[node_index].dead;
+  }
+
+  /**
    * Display the cluster.
    */
   display(col) {

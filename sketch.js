@@ -26,7 +26,7 @@ var farthestSinkIndex = -1,
  * Best cluster color encoding scheme
  */
 var colors = [],
-  colorCount = 15;
+  colorCount = 12;
 
 function setup() {
   createCanvas(OWIDTH, OHEIGHT);
@@ -36,7 +36,7 @@ function setup() {
    */
   for (let i = 0; i < colorCount; i++)
     colors.push(
-      color(floor(random(100)), floor(random(255)), floor(random(200)))
+      color(COLOR_CODES[i][0], COLOR_CODES[i][1], COLOR_CODES[i][2])
     );
   /**
    * Network setup:
@@ -148,5 +148,6 @@ function keyPressed() {
   }
 }
 
-// TODO(Aridaman): Start working on clusters and energy dissipation in respective branch
+// TODO(Aridaman): Generate network energy after every dissipation
+// TODO(Aridaman): Again start evolving if any of the cluster heads die out
 // TODO(Aridaman): Change the selection method to rank selection
