@@ -72,7 +72,7 @@ class Chromosome {
   calculateFP1() {
     let fp1 = 0;
     this.network.nodes.forEach(node => {
-      fp1 += node.energyFactor();
+      if (!node.dead) fp1 += node.energyFactor();
     });
     fp1 +=
       this.network.nodes.length *
@@ -95,7 +95,8 @@ class Chromosome {
      * - Find the farthest sink from each node and update the variable.
      * - Sum the closest distance and find the average distance as well.
      */
-    this.network.nodes.forEach((_, node_index) => {
+    this.network.nodes.forEach((node, node_index) => {
+      if (node.dead) return;
       let i = this.network.farthestSinkIndex(node_index);
       d = this.network.sinkDistanceMatrix[node_index][i];
       if (d > farthestSinkDistance) {
@@ -105,7 +106,8 @@ class Chromosome {
       }
     });
 
-    this.network.nodes.forEach((_, node_index) => {
+    this.network.nodes.forEach((node, node_index) => {
+      if (node.dead) return;
       d = this.network.sinkDistanceMatrix[node_index][
         this.network.closestSinkIndex(node_index)
       ];
@@ -130,10 +132,14 @@ class Chromosome {
     this.genes.forEach((geneValue, index) => {
       if (geneValue) {
         // Find number of nodes in the vicinity of corresponding node to this gene value.
-        this.network.distanceMatrix[index].forEach((d, d_index) => {
-          if (d < VICINITY && !countedNodes.includes(d_index)) {
+        this.network.distanceMatrix[index].forEach((d, other_node_index) => {
+          if (
+            !this.network.nodes[other_node_index].dead &&
+            d < VICINITY &&
+            !countedNodes.includes(other_node_index)
+          ) {
             nodeCount++;
-            countedNodes.push(d_index);
+            countedNodes.push(other_node_index);
           }
         });
       }
