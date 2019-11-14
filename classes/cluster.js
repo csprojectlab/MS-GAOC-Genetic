@@ -8,6 +8,7 @@ class Cluster {
     this.chIndex = ch_index;
     this.sinkIndex = null;
     this.nodes = nodes;
+    this.clusterDead = false;
     return this;
   }
 
@@ -46,6 +47,7 @@ class Cluster {
   updateClusterStatus(node_index) {
     if (this.energyFinished(this.chIndex)) {
       this.setDead(this.chIndex);
+      this.clusterDead = true;
     }
     if (this.energyFinished(node_index)) {
       this.setDead(node_index)

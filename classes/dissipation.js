@@ -21,6 +21,10 @@ class EnergyDissipation {
      * Counting the rounds.
      */
     this.round = 0;
+    /**
+     * variable to stop dissipation. 
+     */
+    this.stopDissipation = false;
     return this;
   }
 
@@ -50,7 +54,7 @@ class EnergyDissipation {
     let temp;
     // Select clusters for dissipation
     this.clusters.forEach(cluster => {
-      if (random(1) < 0.7) {
+      if (random(1) < 0.7 && !cluster.clusterDead) {
         // Cluster selected for dissipation.
         temp = [];
         cluster.nodes.forEach(node_index => {
@@ -67,6 +71,13 @@ class EnergyDissipation {
         this.transmittingNodes.push([]); // Cluster not selected.
       }
     });
+    // Check if any cluster is dead => means CH of a cluster is dead. 
+    // TODO(Aridaman): Add another stopping criteria
+    this.clusters.forEach (cluster => {
+      if (cluster.clusterDead) {
+        this.stopDissipation = true;
+      }
+    })
     return this;
   }
 

@@ -35,9 +35,7 @@ function setup() {
    * Randomly setting the color scheme.
    */
   for (let i = 0; i < colorCount; i++)
-    colors.push(
-      color(COLOR_CODES[i][0], COLOR_CODES[i][1], COLOR_CODES[i][2])
-    );
+    colors.push(color(COLOR_CODES[i][0], COLOR_CODES[i][1], COLOR_CODES[i][2]));
   /**
    * Network setup:
    * - Initialize parameters
@@ -112,8 +110,11 @@ function draw() {
         .setThreshold(1);
     }
     dissipationModel.dissipateData().displayEnergyDissipation();
-    // console.log(dissipationModel)
-    // noLoop();
+    if (dissipationModel.stopDissipation) {
+      console.log("Cluster head dead");
+      dissipationModel == undefined; // Will be initialized with new clusters next time.
+      evolving = true;      // Start evolving the structure again. 
+    }
   }
   pop();
 }

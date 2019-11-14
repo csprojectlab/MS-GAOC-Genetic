@@ -100,7 +100,7 @@ class Node {
   display(isCH, col = color(0, 255, 0), stroke_weight = 0.3) {
     noFill();
     if (isCH) fill(col);
-    if (this.dead)  fill(255, 255, 0);
+    if (this.dead)  fill(0);
     stroke(0);
     strokeWeight(stroke_weight);
 
