@@ -54,7 +54,7 @@ class EnergyDissipation {
     let temp;
     // Select clusters for dissipation
     this.clusters.forEach(cluster => {
-      if (random(1) < 0.7 && !cluster.clusterDead) {
+      if (random(1) < 0.7) {
         // Cluster selected for dissipation.
         temp = [];
         cluster.nodes.forEach(node_index => {

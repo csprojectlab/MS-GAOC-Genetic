@@ -51,6 +51,11 @@ function setup() {
     .calculateDistanceBetweenNodes()
     .calculateDistanceBetweenNodeAndSink();
 
+  // network.nodes.forEach (node => {
+  //   if (random(1) < 0.99)
+  //     node.dead = true;
+  // })
+
   population = new Population(network, POPULATION_SIZE, true)
     .boot()
     .generateChromosomePopulation();
@@ -65,11 +70,11 @@ function draw() {
   strokeWeight(7);
   noFill();
   rect(0, 0, OWIDTH, OHEIGHT);
-
+  // console.log(generationCount)
   if (generationCount == GENERATIONS) {
     alert("Network stable");
-    evolving = false;
-    generationCount = 0;
+    // evolving = false;
+    // generationCount = 0;
   }
   /**
    * Display the network border in rectangular form.
@@ -113,7 +118,10 @@ function draw() {
     if (dissipationModel.stopDissipation) {
       console.log("Cluster head dead");
       dissipationModel == undefined; // Will be initialized with new clusters next time.
-      evolving = true;      // Start evolving the structure again. 
+      evolving = true; // Start evolving the structure again.
+      population = new Population(network, POPULATION_SIZE, true)
+        .boot()
+        .generateChromosomePopulation();
     }
   }
   pop();

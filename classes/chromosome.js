@@ -35,10 +35,17 @@ class Chromosome {
      */
     // this cluster head should not lie in the vicinity of previously chosed CHs by the gene.
     for (let i = 0; i < genes.length; i++) {
-      if (i != index && genes[i] == 1) {
-        // If gene selects node as cluster head.
-        d = this.network.distanceMatrix[i][index];
-        if (d < VICINITY) return false;
+      // Don't check the node with itself.
+      if (i != index) {
+        // If corresponding node is selected as cluster head.
+        if (genes[i] == 1) {
+          // Selected cluster head is already dead.
+          if (this.network.nodes[i].dead) return false;
+          else {
+            d = this.network.distanceMatrix[i][index];
+            if (d < VICINITY) return false;
+          }
+        }
       }
     }
     return true;
@@ -49,11 +56,16 @@ class Chromosome {
    */
   generateChromosome() {
     this.genes.fill(0);
-    let selectionGene = this.genes.map((_, index) => index),
+    let selectionGene = [],//this.genes.filter((gene, index) => index),
       i = 1,
       index,
       limit = floor(random(NUMBER_OF_CH - 3, NUMBER_OF_CH + 1));
+    this.genes.forEach((gene, index) => {
+      if (!this.network.nodes[index].dead)
+        selectionGene.push(index);
+    })
     while (i <= limit) {
+      // console.log("Finding")
       index = floor(random(selectionGene.length));
       if (this.validGene(this.genes, selectionGene[index])) {
         this.genes[selectionGene[index]] = 1;

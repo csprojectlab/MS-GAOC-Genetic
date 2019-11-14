@@ -100,7 +100,11 @@ class Node {
   display(isCH, col = color(0, 255, 0), stroke_weight = 0.3) {
     noFill();
     if (isCH) fill(col);
-    if (this.dead)  fill(0);
+    if (this.dead)  {
+      fill(0);
+      ellipse(this.position.x, this.position.y, 3, 3)
+      return;
+    }
     stroke(0);
     strokeWeight(stroke_weight);
 

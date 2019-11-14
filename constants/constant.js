@@ -13,7 +13,7 @@ const LINK = {
 };
 
 const POPULATION_SIZE = 30,
-  GENERATIONS = 100,
+  GENERATIONS = 300,
   VICINITY = 80,
   VARPHI = 0.3,
   DELTA = 0.3,
