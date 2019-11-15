@@ -41,6 +41,12 @@ let evolvingCanvas = null,
   bestNetworkP5Canvas = null,
   dissipationP5Canvas = null;
 
+/**
+ * Charts
+ */
+let aliveNodesChart = null,
+  chCountChart = null;
+
 evolvingCanvas = function(p) {
   p.setup = function() {
     p.createCanvas(CWIDTH, CHEIGHT);
@@ -111,9 +117,11 @@ dissipationCanvas = function(p) {
           .setThreshold(1);
       }
       if (visualizeDissipation) {
-        dissipationModel.dissipateForVisualization().displayEnergyDissipation(p);
+        dissipationModel
+          .dissipateForVisualization()
+          .displayEnergyDissipation(p);
       } else {
-        dissipationModel.dissipateData();       // Without Visualization.   
+        dissipationModel.dissipateData(); // Without Visualization.
       }
       //dissipationModel.dissipateData(p); //.displayEnergyDissipation(p);
       if (dissipationModel.stopDissipation) {
@@ -159,6 +167,7 @@ function setup() {
   bestNetworkP5Canvas = new p5(bestNetworkCanvas, "best-network-canvas");
   dissipationP5Canvas = new p5(dissipationCanvas, "dissipation-canvas");
   dissipationP5Canvas.noLoop();
+  setupCharts();
 }
 
 /**
@@ -197,5 +206,87 @@ function keyPressed() {
       bestNetworkP5Canvas.loop();
       dissipationP5Canvas.loop();
     }
-  } else if (key == "f" || key == "F") visualizeDissipation = !visualizeDissipation;
+  } else if (key == "f" || key == "F")
+    visualizeDissipation = !visualizeDissipation;
+}
+
+/**
+ * We are creating canvas inside p5 component because we have to get the 2d context
+ */
+function setupCharts() {
+  /**
+   * Alive nodes chart
+   */
+  new p5(p => {
+    p.setup = function() {
+      let c = document.getElementById("alive-nodes-chart").getContext("2d");
+      aliveNodesChart = createChart1(c, "line");
+    };
+  }, "alive-nodes-div");
+  /**
+   * Number of CH chart
+   */
+  new p5(p => {
+    p.setup = function () {
+      let c = document.getElementById("ch-count-chart").getContext("2d");
+      chCountChart = createChart1(c, "horizontalBar");
+    }
+  }, "ch-count-div");
+}
+
+function createChart1(canvas, t) {
+  var myChart = new Chart(canvas, {
+    type: t,
+    data: {
+      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+      datasets: [
+        {
+          label: "# of Votes",
+          data: [12, 19, 3, 5, 2, 3],
+          backgroundColor: [
+            "rgba(255, 99, 132, 0.2)",
+            "rgba(54, 162, 235, 0.2)",
+            "rgba(255, 206, 86, 0.2)",
+            "rgba(75, 192, 192, 0.2)",
+            "rgba(153, 102, 255, 0.2)",
+            "rgba(255, 159, 64, 0.2)"
+          ],
+          borderColor: [
+            "rgba(255, 99, 132, 1)",
+            "rgba(54, 162, 235, 1)",
+            "rgba(255, 206, 86, 1)",
+            "rgba(75, 192, 192, 1)",
+            "rgba(153, 102, 255, 1)",
+            "rgba(255, 159, 64, 1)"
+          ],
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true
+            }
+          }
+        ]
+      }
+    }
+  });
+  return myChart;
+}
+
+setInterval(() => {
+  addData(aliveNodesChart, "Magenta", Math.random()*20)
+  addData(chCountChart, "magenta", Math.random()*20)
+}, 3000)
+
+function addData(chart, label, data) {
+  chart.data.labels.push(label);
+  chart.data.datasets.forEach((dataset) => {
+      dataset.data.push(data);
+  });
+  chart.update();
 }

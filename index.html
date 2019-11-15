@@ -10,7 +10,7 @@
     <script src="./lib/p5/p5.min.js"></script>
     <script src="./lib/p5/p5.dom.min.js"></script>
     <!--Bootstrap-->
-    <link rel="stylesheet" href="./lib/bootstrap4/bootstrap.min.css">
+    <link rel="stylesheet" href="./lib/bootstrap4/bootstrap.min.css" />
     <!--Chart.js-->
     <script src="./lib/chart/chart.min.js"></script>
 
@@ -31,6 +31,7 @@
   </head>
   <body>
     <div class="container-fluid">
+      <!-- Display 3 Canvas -->
       <div class="row">
         <div class="col-sm-4">
           <div class="card text-center">
@@ -55,6 +56,15 @@
               <div id="dissipation-canvas"></div>
             </div>
           </div>
+        </div>
+      </div>
+      <!-- Display Charts -->
+      <div class="row">
+        <div class="col-sm-6 p-4" id="alive-nodes-div">
+          <canvas width="400" height="100" id="alive-nodes-chart" style="border:1px solid #000000;"></canvas>
+        </div>
+        <div class="col-sm-6 p-4" id="ch-count-div">
+          <canvas width="400" height="100" id="ch-count-chart" style="border:1px solid #000000;"></canvas>
         </div>
       </div>
     </div>
