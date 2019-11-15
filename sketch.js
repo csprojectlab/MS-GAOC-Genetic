@@ -5,7 +5,7 @@ var population,
   network,
   dissipationModel = undefined,
   evolving = true,
-  rounds = 0;
+  rounds = [];
 
 /**
  * Display Variables.
@@ -46,6 +46,12 @@ let evolvingCanvas = null,
  */
 let aliveNodesChart = null,
   chCountChart = null;
+
+/**
+ *Charts dataset
+ */
+let aliveNodesDataset = [],
+  chCountDataset = [];
 
 evolvingCanvas = function(p) {
   p.setup = function() {
@@ -126,7 +132,12 @@ dissipationCanvas = function(p) {
       //dissipationModel.dissipateData(p); //.displayEnergyDissipation(p);
       if (dissipationModel.stopDissipation) {
         console.log("Cluster head dead");
-        rounds += dissipationModel.round;
+        rounds.push((rounds.length == 0) ? dissipationModel.round : rounds[rounds.length - 1] + dissipationModel.round)
+        /**
+         * Update charts. 
+         */
+        addData(chCountChart, rounds[rounds.length - 1], population.bestNetworkClusters.length);
+        addData(aliveNodesChart, rounds[rounds.length - 1], network.nodes.filter(n => n.dead == false).length)
         dissipationModel = undefined; // Will be initialized with new clusters next time.
         population = new Population(network, POPULATION_SIZE, true)
           .boot()
@@ -208,85 +219,4 @@ function keyPressed() {
     }
   } else if (key == "f" || key == "F")
     visualizeDissipation = !visualizeDissipation;
-}
-
-/**
- * We are creating canvas inside p5 component because we have to get the 2d context
- */
-function setupCharts() {
-  /**
-   * Alive nodes chart
-   */
-  new p5(p => {
-    p.setup = function() {
-      let c = document.getElementById("alive-nodes-chart").getContext("2d");
-      aliveNodesChart = createChart1(c, "line");
-    };
-  }, "alive-nodes-div");
-  /**
-   * Number of CH chart
-   */
-  new p5(p => {
-    p.setup = function () {
-      let c = document.getElementById("ch-count-chart").getContext("2d");
-      chCountChart = createChart1(c, "horizontalBar");
-    }
-  }, "ch-count-div");
-}
-
-function createChart1(canvas, t) {
-  var myChart = new Chart(canvas, {
-    type: t,
-    data: {
-      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-      datasets: [
-        {
-          label: "# of Votes",
-          data: [12, 19, 3, 5, 2, 3],
-          backgroundColor: [
-            "rgba(255, 99, 132, 0.2)",
-            "rgba(54, 162, 235, 0.2)",
-            "rgba(255, 206, 86, 0.2)",
-            "rgba(75, 192, 192, 0.2)",
-            "rgba(153, 102, 255, 0.2)",
-            "rgba(255, 159, 64, 0.2)"
-          ],
-          borderColor: [
-            "rgba(255, 99, 132, 1)",
-            "rgba(54, 162, 235, 1)",
-            "rgba(255, 206, 86, 1)",
-            "rgba(75, 192, 192, 1)",
-            "rgba(153, 102, 255, 1)",
-            "rgba(255, 159, 64, 1)"
-          ],
-          borderWidth: 1
-        }
-      ]
-    },
-    options: {
-      scales: {
-        yAxes: [
-          {
-            ticks: {
-              beginAtZero: true
-            }
-          }
-        ]
-      }
-    }
-  });
-  return myChart;
-}
-
-setInterval(() => {
-  addData(aliveNodesChart, "Magenta", Math.random()*20)
-  addData(chCountChart, "magenta", Math.random()*20)
-}, 3000)
-
-function addData(chart, label, data) {
-  chart.data.labels.push(label);
-  chart.data.datasets.forEach((dataset) => {
-      dataset.data.push(data);
-  });
-  chart.update();
 }
