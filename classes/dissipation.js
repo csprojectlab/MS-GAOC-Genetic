@@ -49,6 +49,17 @@ class EnergyDissipation {
    * - Clusters should be added before dissipating energy
    */
   dissipateData() {
+    while (!this.stopDissipation) {
+      this.dissipate();
+    }
+    return this;
+  }
+
+  dissipateForVisualization() {
+    return this.dissipate();
+  }
+
+  dissipate() {
     this.round++;
     this.transmittingNodes = [];
     let temp;

@@ -4,7 +4,8 @@
 var population,
   network,
   dissipationModel = undefined,
-  evolving = true;
+  evolving = true,
+  rounds = 0;
 
 /**
  * Display Variables.
@@ -12,6 +13,7 @@ var population,
 var displayClusters = false,
   displayClusterLinks = true,
   displaySinkLinks = false,
+  visualizeDissipation = true,
   pause = false;
 
 /**
@@ -29,9 +31,107 @@ var farthestSinkIndex = -1,
 var colors = [],
   colorCount = 12;
 
+/**
+ * Different canvas
+ */
+let evolvingCanvas = null,
+  bestNetworkCanvas = null,
+  dissipationCanvas = null,
+  evolvingP5Canvas = null,
+  bestNetworkP5Canvas = null,
+  dissipationP5Canvas = null;
+
+evolvingCanvas = function(p) {
+  p.setup = function() {
+    p.createCanvas(CWIDTH, CHEIGHT);
+  };
+
+  p.draw = function() {
+    if (evolving) {
+      generationCount++;
+      if (generationCount == GENERATIONS) {
+        evolving = false;
+        generationCount = 0;
+        dissipationP5Canvas.loop();
+      }
+      p.background(255);
+      p.strokeWeight(2);
+      p.stroke(0);
+      p.rect(0, 0, CWIDTH, CHEIGHT);
+      displayNetworkBorder(p);
+      population
+        .fittest()
+        .generateClusters()
+        .displayAll(p)
+        .evolve();
+    }
+  };
+};
+
+bestNetworkCanvas = function(p) {
+  p.setup = function() {
+    p.createCanvas(CWIDTH, CHEIGHT);
+    p.background(0);
+  };
+
+  p.draw = function() {
+    p.background(255);
+    p.strokeWeight(2);
+    p.stroke(0);
+    p.rect(0, 0, CWIDTH, CHEIGHT);
+    displayNetworkBorder(p);
+    if (population.bestNetworkClusters.length > 0) {
+      population.display(p);
+    }
+  };
+};
+
+dissipationCanvas = function(p) {
+  p.setup = function() {
+    p.createCanvas(CWIDTH, CHEIGHT);
+    p.background(255);
+  };
+
+  p.draw = function() {
+    p.strokeWeight(2);
+    p.stroke(0);
+    p.rect(0, 0, CWIDTH, CHEIGHT);
+    displayNetworkBorder(p);
+    if (!evolving) {
+      evolvingP5Canvas.noLoop();
+      p.frameRate(100);
+      p.background(255);
+      p.strokeWeight(2);
+      p.stroke(0);
+      p.rect(0, 0, CWIDTH, CHEIGHT);
+      displayNetworkBorder(p);
+      if (dissipationModel == undefined) {
+        dissipationModel = new EnergyDissipation()
+          .addClusters(population.bestNetworkClusters)
+          .setThreshold(1);
+      }
+      if (visualizeDissipation) {
+        dissipationModel.dissipateForVisualization().displayEnergyDissipation(p);
+      } else {
+        dissipationModel.dissipateData();       // Without Visualization.   
+      }
+      //dissipationModel.dissipateData(p); //.displayEnergyDissipation(p);
+      if (dissipationModel.stopDissipation) {
+        console.log("Cluster head dead");
+        rounds += dissipationModel.round;
+        dissipationModel = undefined; // Will be initialized with new clusters next time.
+        population = new Population(network, POPULATION_SIZE, true)
+          .boot()
+          .generateChromosomePopulation();
+        evolving = true; // Start evolving the structure again.
+        dissipationP5Canvas.noLoop();
+        evolvingP5Canvas.loop();
+      }
+    }
+  };
+};
+
 function setup() {
-  createCanvas(OWIDTH, OHEIGHT);
-  // frameRate(10);
   /**
    * Randomly setting the color scheme.
    */
@@ -51,102 +151,25 @@ function setup() {
     .generateSinks()
     .calculateDistanceBetweenNodes()
     .calculateDistanceBetweenNodeAndSink();
-
-  // network.nodes.forEach (node => {
-  //   if (random(1) < 0.99)
-  //     node.dead = true;
-  // })
-
   population = new Population(network, POPULATION_SIZE, true)
     .boot()
     .generateChromosomePopulation();
-}
 
-/**
- * Draw loop running atleast 60 frames or times per second.
- */
-function draw() {
-  background(255);
-  stroke(0);
-  strokeWeight(7);
-  noFill();
-  rect(0, 0, OWIDTH, OHEIGHT);
-  // console.log(generationCount)
-  if (generationCount == GENERATIONS) {
-    evolving = false;
-    // alert("Network stable");
-    generationCount = 0;
-  }
-  /**
-   * Display the network border in rectangular form.
-   * Required for MS-GAOC.
-   */
-  displayNetworkBorder();
-  if (evolving) {
-    generationCount++;
-    population.fittest().generateClusters();
-  }
-  /**
-   * Display the best network structure.
-   */
-  push();
-  translate(CWIDTH, 0);
-  textSize(16);
-  stroke(255, 0, 0);
-  text("BEST NETWORK STRUCTURE", 10, 20);
-  stroke(0);
-  strokeWeight(4);
-  line(0, 0, 0, OHEIGHT);
-  displayNetworkBorder();
-  population.display();
-  pop();
-
-  /**
-   * Display all network structures being evaluated and evole the network.
-   */
-  push();
-  translate(0, 0);
-  if (evolving) {
-    textSize(16);
-    stroke(255, 0, 0);
-    text("EVOLVING NETWORK", 10, 20);
-    population.displayAll();
-    population.evolve();
-  } else {
-    textSize(16);
-    stroke(255, 0, 0);
-    text("NETWORK NODES DISSIPATING ENERGY", 10, 20);
-    /**
-     * Not evolving then dissipate energy.
-     */
-    if (dissipationModel == undefined) {
-      dissipationModel = new EnergyDissipation()
-        .addClusters(population.bestNetworkClusters)
-        .setThreshold(1);
-    }
-    dissipationModel.dissipateData().displayEnergyDissipation();
-    if (dissipationModel.stopDissipation) {
-      console.log("Cluster head dead");
-      // alert("cluster head dead");
-      dissipationModel = undefined; // Will be initialized with new clusters next time.
-      evolving = true; // Start evolving the structure again.
-      population = new Population(network, POPULATION_SIZE, true)
-        .boot()
-        .generateChromosomePopulation();
-    }
-  }
-  pop();
+  evolvingP5Canvas = new p5(evolvingCanvas, "evolution-canvas");
+  bestNetworkP5Canvas = new p5(bestNetworkCanvas, "best-network-canvas");
+  dissipationP5Canvas = new p5(dissipationCanvas, "dissipation-canvas");
+  dissipationP5Canvas.noLoop();
 }
 
 /**
  * Draw Network Area.
  * Its a rectangle based on the spawn border.
  */
-function displayNetworkBorder() {
-  stroke(0, 255, 0);
-  strokeWeight(2);
-  noFill();
-  rect(
+function displayNetworkBorder(p) {
+  p.stroke(0, 255, 0);
+  p.strokeWeight(2);
+  p.noFill();
+  p.rect(
     SPAWN_BORDER,
     SPAWN_BORDER,
     CWIDTH - 2 * SPAWN_BORDER,
@@ -163,11 +186,16 @@ function keyPressed() {
   else if (key == "s" || key == "S") displaySinkLinks = !displaySinkLinks;
   else if (key == "p" || key == "P") {
     pause = !pause;
-    if (pause) noLoop();
-    else loop();
-  }
+    if (pause) {
+      noLoop();
+      evolvingP5Canvas.noLoop();
+      bestNetworkP5Canvas.noLoop();
+      dissipationP5Canvas.noLoop();
+    } else {
+      loop();
+      evolvingP5Canvas.loop();
+      bestNetworkP5Canvas.loop();
+      dissipationP5Canvas.loop();
+    }
+  } else if (key == "f" || key == "F") visualizeDissipation = !visualizeDissipation;
 }
-
-// TODO(Aridaman): Generate network energy after every dissipation
-// TODO(Aridaman): Again start evolving if any of the cluster heads die out
-// TODO(Aridaman): Change the selection method to rank selection
