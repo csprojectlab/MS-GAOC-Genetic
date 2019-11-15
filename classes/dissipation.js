@@ -22,7 +22,7 @@ class EnergyDissipation {
      */
     this.round = 0;
     /**
-     * variable to stop dissipation. 
+     * variable to stop dissipation.
      */
     this.stopDissipation = false;
     return this;
@@ -71,25 +71,26 @@ class EnergyDissipation {
         this.transmittingNodes.push([]); // Cluster not selected.
       }
     });
-    // Check if any cluster is dead => means CH of a cluster is dead. 
+    // Check if any cluster is dead => means CH of a cluster is dead.
     // TODO(Aridaman): Add another stopping criteria
-    this.clusters.forEach (cluster => {
+    this.clusters.forEach(cluster => {
       if (cluster.clusterDead) {
         this.stopDissipation = true;
       }
-    })
+    });
     return this;
   }
 
   /**
    * Display transmitting nodes.
    */
-  displayEnergyDissipation() {
+  displayEnergyDissipation(p) {
     let colorIndex = 0;
     this.clusters.forEach((cluster, index) => {
       cluster.displayEnergyDissipation(
         this.transmittingNodes[index],
-        colors[colorIndex]
+        colors[colorIndex],
+        p
       );
       colorIndex = (colorIndex + 1) % colorCount;
     });

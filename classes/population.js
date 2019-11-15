@@ -183,10 +183,10 @@ class Population {
    * - Display the best network structure.
    * - The display doesnot need genes because cluster already has the required information
    */
-  display() {
+  display(p) {
     let colorIndex = 0;
     this.bestNetworkClusters.forEach(cluster => {
-      cluster.display(colors[colorIndex]);
+      cluster.display(colors[colorIndex], p);
       colorIndex = (colorIndex + 1) % colorCount;
     });
     // this.network.display(this.chromosomes[this.bestChromosomeIndex].genes);
@@ -195,10 +195,12 @@ class Population {
 
   /**
    * Display all
+   * p is the canvas on which to draw. 
    */
-  displayAll() {
+  displayAll(p) {
     this.chromosomes.forEach(chromosome => {
-      this.network.display(chromosome.genes);
+      this.network.display(chromosome.genes, p);
     });
+    return this;
   }
 }

@@ -12,6 +12,12 @@ const LINK = {
   SINK_LINK: "ClusterHead_to_sink_link"
 };
 
+const CANVAS = {
+    EVOLVING: "Evolution canvas",
+    BEST_NETWORK: "Best network canvas",
+    DISSIPATION: "Dissipation canvas"
+}
+
 const POPULATION_SIZE = 30,
   GENERATIONS = 200,
   VICINITY = 80,
@@ -23,9 +29,9 @@ const POPULATION_SIZE = 30,
 
 const OWIDTH = 1100,
   OHEIGHT = 400,
-  CWIDTH = OWIDTH / 2,
-  CHEIGHT = OHEIGHT,
-  SPAWN_BORDER = 70,
+  CWIDTH = 460,
+  CHEIGHT = 400,
+  SPAWN_BORDER = 40,
   NUMBER_OF_NODES = 50,
   NUMBER_OF_CH = 4,
   NUMBER_OF_SINKS = 4,

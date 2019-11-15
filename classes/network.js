@@ -154,10 +154,10 @@ class Network {
    * Function to generate sinks.
    */
   generateSinks() {
-    this.sinks.push(new Sink(35, CHEIGHT / 2));
-    this.sinks.push(new Sink(CWIDTH - 35, CHEIGHT / 2));
-    this.sinks.push(new Sink(CWIDTH / 2, 35));
-    this.sinks.push(new Sink(CWIDTH / 2, CHEIGHT - 35));
+    this.sinks.push(new Sink(15, CHEIGHT / 2));
+    this.sinks.push(new Sink(CWIDTH - 15, CHEIGHT / 2));
+    this.sinks.push(new Sink(CWIDTH / 2, 15));
+    this.sinks.push(new Sink(CWIDTH / 2, CHEIGHT - 15));
     return this;
   }
 
@@ -251,12 +251,13 @@ class Network {
   /**
    * Display function.
    * The length of genes and nodes array is same.
+   * p is the canvas object.
    */
-  display(genes) {
+  display(genes, p) {
     let i;
     // Display the nodes and sinks.
-    this.nodes.forEach((node, index) => node.display(genes[index]));
-    this.sinks.forEach(sink => sink.display());
+    this.nodes.forEach((node, index) => node.display(genes[index], p));
+    this.sinks.forEach(sink => sink.display(p));
 
     // Display the links between nodes and CH.
     // Find cluster head indices.
@@ -271,7 +272,7 @@ class Network {
         // Link to closest sink.
       } else {
         // Link to the closest cluster head.
-        node.displayLink(this.nodes[i], LINK.CH_LINK, color(255, 255, 0));
+        node.displayLink(this.nodes[i], LINK.CH_LINK, color(255, 255, 0), p);
       }
     });
 
@@ -281,7 +282,8 @@ class Network {
       this.nodes[ch_index].displayLink(
         this.sinks[i],
         LINK.SINK_LINK,
-        color(0, 255, 255)
+        color(0, 255, 255),
+        p
       );
     });
   }

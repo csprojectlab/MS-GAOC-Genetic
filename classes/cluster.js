@@ -42,7 +42,7 @@ class Cluster {
   }
 
   /**
-   * Update the status of CH and network with respect to the parameter node. 
+   * Update the status of CH and network with respect to the parameter node.
    */
   updateClusterStatus(node_index) {
     if (this.energyFinished(this.chIndex)) {
@@ -50,7 +50,7 @@ class Cluster {
       this.clusterDead = true;
     }
     if (this.energyFinished(node_index)) {
-      this.setDead(node_index)
+      this.setDead(node_index);
     }
     return this;
   }
@@ -79,24 +79,25 @@ class Cluster {
   /**
    * Display the cluster.
    */
-  display(col) {
+  display(col, p) {
     /**
      * Display the sinks.
      */
-    this.network.sinks.forEach(sink => sink.display());
+    this.network.sinks.forEach(sink => sink.display(p));
     /**
      * Display the cluster head.
      */
-    this.network.nodes[this.chIndex].display(1, col, 1);
+    this.network.nodes[this.chIndex].display(1, p, col, 1);
     /**
      * Display the nodes and CH links with specified color.
      */
     this.nodes.forEach(node_index => {
-      this.network.nodes[node_index].display(0, col, 1);
+      this.network.nodes[node_index].display(0, p, col, 1);
       this.network.nodes[node_index].displayLink(
         this.network.nodes[this.chIndex],
         LINK.CH_LINK,
-        col
+        col,
+        p
       );
     });
     /**
@@ -105,7 +106,8 @@ class Cluster {
     this.network.nodes[this.chIndex].displayLink(
       this.network.sinks[this.sinkIndex],
       LINK.SINK_LINK,
-      col
+      col,
+      p
     );
   }
 
@@ -113,30 +115,31 @@ class Cluster {
    * Function to display energy dissipation.
    * Display the links of transmitting nodes with CH and CH with the sink.
    */
-  displayEnergyDissipation(transmitting_nodes, col = color(255, 255, 0)) {
+  displayEnergyDissipation(transmitting_nodes, col = color(255, 255, 0), p) {
     /**
      * Display the sinks.
      */
-    this.network.sinks.forEach(sink => sink.display());
+    this.network.sinks.forEach(sink => sink.display(p));
     /**
      * Display the cluster head.
      */
-    this.network.nodes[this.chIndex].display(1, col, 1);
+    this.network.nodes[this.chIndex].display(1, p, col, 1);
     /**
      * Display cluster nodes
      */
     this.nodes.forEach(node_index =>
-      this.network.nodes[node_index].display(0, col, 1)
+      this.network.nodes[node_index].display(0, p, col, 1)
     );
     // Display links.
     if (transmitting_nodes.length > 0) {
       this.nodes.forEach(node_index => {
-        this.network.nodes[node_index].display(0, col, 1);
+        this.network.nodes[node_index].display(0, p, col, 1);
         if (transmitting_nodes.includes(node_index))
           this.network.nodes[node_index].displayLink(
             this.network.nodes[this.chIndex],
             LINK.CH_LINK,
-            col
+            col,
+            p
           );
       });
       /**
@@ -145,7 +148,8 @@ class Cluster {
       this.network.nodes[this.chIndex].displayLink(
         this.network.sinks[this.sinkIndex],
         LINK.SINK_LINK,
-        col
+        col,
+        p
       );
     }
 

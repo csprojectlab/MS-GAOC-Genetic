@@ -67,14 +67,15 @@ class Node {
   /**
    * Display the link with another node.
    */
-  displayLink(otherNode, link_type, col) {
+  displayLink(otherNode, link_type, col, p) {
+    p.push();
     if (this.dead) return;
-    stroke(col);
-    strokeWeight(1);
+    p.stroke(col);
+    p.strokeWeight(1);
     switch (link_type) {
       case LINK.CH_LINK:
         if (!displayClusterLinks) return;
-        line(
+        p.line(
           this.position.x,
           this.position.y,
           otherNode.position.x,
@@ -83,7 +84,7 @@ class Node {
         break;
       case LINK.SINK_LINK:
         if (!displaySinkLinks) return;
-        line(
+        p.line(
           this.position.x,
           this.position.y,
           otherNode.position.x,
@@ -91,25 +92,27 @@ class Node {
         );
         break;
     }
+    p.pop();
   }
 
   /**
    * Display function based on type of node.
    */
-  display(isCH, col = color(0, 255, 0), stroke_weight = 0.3) {
-    noFill();
-    if (isCH) fill(col);
+  display(isCH, p, col = color(0, 255, 0), stroke_weight = 0.3) {
+    p.push();
+    p.noFill();
+    if (isCH) p.fill(col);
     if (this.dead) {
-      fill(0);
+      p.fill(0);
       // ellipse(this.position.x, this.position.y, 3, 3)
       // return;
     }
-    stroke(0);
-    strokeWeight(stroke_weight);
+    p.stroke(0);
+    p.strokeWeight(stroke_weight);
 
     switch (this.type) {
       case NODE_TYPE.ADV:
-        triangle(
+        p.triangle(
           this.position.x,
           this.position.y,
           this.position.x - 8,
@@ -119,17 +122,18 @@ class Node {
         );
         break;
       case NODE_TYPE.NRM:
-        ellipse(this.position.x, this.position.y, 8, 8);
+        p.ellipse(this.position.x, this.position.y, 8, 8);
         break;
       case NODE_TYPE.INT:
-        rect(this.position.x, this.position.y, 10, 10);
+        p.rect(this.position.x, this.position.y, 10, 10);
         break;
     }
     if (isCH && displayClusters) {
-      noFill();
-      stroke(col);
-      strokeWeight(stroke_weight);
-      ellipse(this.position.x, this.position.y, 2 * VICINITY);
+      p.noFill();
+      p.stroke(col);
+      p.strokeWeight(stroke_weight);
+      p.ellipse(this.position.x, this.position.y, 2 * VICINITY);
     }
+    p.pop();
   }
 }

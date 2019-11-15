@@ -9,6 +9,10 @@
     <!--Processing framework-->
     <script src="./lib/p5/p5.min.js"></script>
     <script src="./lib/p5/p5.dom.min.js"></script>
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="./lib/bootstrap4/bootstrap.min.css">
+    <!--Chart.js-->
+    <script src="./lib/chart/chart.min.js"></script>
 
     <!--Constants file-->
     <script src="./constants/constant.js"></script>
@@ -23,12 +27,36 @@
     <script src="./classes/chromosome.js"></script>
 
     <!--Main script file-->
-    <script src="./sketch.js"></script>
+    <script src="./sketch1.js"></script>
   </head>
   <body>
-    <h2 style="color:magenta" align="center">
-      <strong>MS-GAOC-IMPLEMENTATION</strong>
-    </h2>
-    <p align="center"><strong>Press => c: clusters, l: cluster_node_links, s: cluster_sink_links</strong></p>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="cart-title">Evolving</h5>
+              <div id="evolution-canvas"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="cart-title">Evolving</h5>
+              <div id="best-network-canvas"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="cart-title">Evolving</h5>
+              <div id="dissipation-canvas"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
