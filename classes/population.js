@@ -166,7 +166,7 @@ class Population {
           childChromosome.mutate(MUTATION_RATE);
           newChromosomes.push(childChromosome);
         } else {
-          console.log("null child");
+          // console.log("null child");
         }
       } else {
         newChromosomes.push(this.chromosomes[offset].copy());

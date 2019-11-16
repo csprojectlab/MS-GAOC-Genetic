@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="./lib/bootstrap4/bootstrap.min.css" />
     <!--Chart.js-->
     <script src="./lib/chart/chart.min.js"></script>
+    <script src="./lib/jQuery/jQuery.js"></script>
 
     <!--Constants file-->
     <script src="./constants/constant.js"></script>
@@ -30,49 +31,63 @@
     <script src="./charts/chart_controller.js"></script>
     <script src="./sketch.js"></script>
   </head>
+  <style>
+    .border1 {
+      border-width: 2px #9933cc !important;
+    }
+  </style>
   <body>
     <div class="container-fluid">
       <!-- Display 3 Canvas -->
       <div class="row">
         <div class="col-sm-4">
           <div class="card text-center">
+            <div class="card-header" style="background: #9933CC;">
+              <h4 style="color: white;"><strong>Evolving</strong></h4>
+            </div>
             <div class="card-body">
-              <h5 class="cart-title">Evolving</h5>
               <div id="evolution-canvas"></div>
+              <button type="button" class="btn btn-primary" id="evolvingScreen">Turn On Display</button>
             </div>
           </div>
         </div>
         <div class="col-sm-4">
           <div class="card text-center">
+            <div class="card-header" style="background: #9933CC;">
+              <h4 style="color: white;"><strong>Best Network</strong></h4>
+            </div>
             <div class="card-body">
-              <h5 class="cart-title">Evolving</h5>
               <div id="best-network-canvas"></div>
+              <button type="button" class="btn btn-primary" id="bestNetworkScreen">Turn Off Display</button>
             </div>
           </div>
         </div>
         <div class="col-sm-4">
           <div class="card text-center">
+            <div class="card-header" style="background: #9933CC;">
+              <h4 style="color: white;"><strong>Energy Dissipation</strong></h4>
+            </div>
             <div class="card-body">
-              <h5 class="cart-title">Evolving</h5>
               <div id="dissipation-canvas"></div>
+              <button type="button" class="btn btn-primary" id="dissipationScreen">Turn On Display</button>
             </div>
           </div>
         </div>
       </div>
       <!-- Display Charts -->
       <div class="row" style="height: 300px;">
-        <div class="col-sm-6 p-4" id="alive-nodes-div">
+        <div class="col-sm-6 p-4" id="stability-period-div">
           <canvas
             width="400"
-            height="100"
-            id="alive-nodes-chart"
+            height="120"
+            id="stability-period-chart"
             style="border:1px solid #000000;"
           ></canvas>
         </div>
         <div class="col-sm-6 p-4" id="ch-count-div">
           <canvas
             width="400"
-            height="100"
+            height="120"
             id="ch-count-chart"
             style="border:1px solid #000000;"
           ></canvas>
@@ -83,7 +98,25 @@
           <canvas
             id="packets-to-sink-chart"
             width="400"
-            height="100"
+            height="120"
+            style="border:1px solid black"
+          ></canvas>
+        </div>
+        <div class="col-sm-6" id="total-energy-div">
+          <canvas
+            id="total-energy-chart"
+            width="400"
+            height="120"
+            style="border:1px solid black"
+          ></canvas>
+        </div>
+      </div>
+      <div class="row ">
+        <div class="col-sm-6 p-1" id="alive-nodes-div">
+          <canvas
+            id="alive-nodes-chart"
+            width="400"
+            height="120"
             style="border:1px solid black"
           ></canvas>
         </div>

@@ -13,7 +13,7 @@ var population,
 var displayClusters = false,
   displayClusterLinks = true,
   displaySinkLinks = false,
-  visualizeDissipation = true,
+  visualizeDissipation = false,
   pause = false;
 
 /**
@@ -46,14 +46,28 @@ let evolvingCanvas = null,
  */
 let aliveNodesChart = null,
   chCountChart = null,
-  packetsToSinkChart = null;
+  packetsToSinkChart = null,
+  totalEnergyChart = null,
+  stabilityPeriodChart = null;
 
 /**
  *Charts dataset
  */
 let aliveNodesDataset = [],
   chCountDataset = [],
-  packetsToSinkDataset = [];
+  packetsToSinkDataset = [],
+  totalEnergyDataset = [],
+  stabilityPeriodDataset = [];
+
+var selectionProb = 0.05,
+  thresholding = 0.015;
+
+/**
+ * Screen displaying
+ */
+let evolvingScreen = false,
+  bestNetworkScreen = true,
+  dissipationScreen = false;
 
 evolvingCanvas = function(p) {
   p.setup = function() {
@@ -73,11 +87,9 @@ evolvingCanvas = function(p) {
       p.stroke(0);
       p.rect(0, 0, CWIDTH, CHEIGHT);
       displayNetworkBorder(p);
-      population
-        .fittest()
-        .generateClusters()
-        .displayAll(p)
-        .evolve();
+      population.fittest().generateClusters();
+      if (evolvingScreen) population.displayAll(p);
+      population.evolve();
     }
   };
 };
@@ -95,7 +107,8 @@ bestNetworkCanvas = function(p) {
     p.rect(0, 0, CWIDTH, CHEIGHT);
     displayNetworkBorder(p);
     if (population.bestNetworkClusters.length > 0) {
-      population.display(p);
+      if (bestNetworkScreen)
+        population.display(p)
     }
   };
 };
@@ -112,7 +125,7 @@ dissipationCanvas = function(p) {
     p.rect(0, 0, CWIDTH, CHEIGHT);
     displayNetworkBorder(p);
     if (!evolving) {
-      evolvingP5Canvas.noLoop();
+      //evolvingP5Canvas.noLoop();
       p.frameRate(100);
       p.background(255);
       p.strokeWeight(2);
@@ -120,11 +133,12 @@ dissipationCanvas = function(p) {
       p.rect(0, 0, CWIDTH, CHEIGHT);
       displayNetworkBorder(p);
       if (dissipationModel == undefined) {
-        dissipationModel = new EnergyDissipation()
+        network.calculateEnergy();
+        dissipationModel = new EnergyDissipation(network)
           .addClusters(population.bestNetworkClusters)
-          .setThreshold(1);
+          .setThreshold(thresholding * network.networkEnergy);
       }
-      if (visualizeDissipation) {
+      if (dissipationScreen) {
         dissipationModel
           .dissipateForVisualization()
           .displayEnergyDissipation(p);
@@ -133,7 +147,8 @@ dissipationCanvas = function(p) {
       }
       //dissipationModel.dissipateData(p); //.displayEnergyDissipation(p);
       if (dissipationModel.stopDissipation) {
-        console.log("Cluster head dead");
+        thresholding += 0.05;
+        if (thresholding >= 0.9) thresholding = 0.8;
         rounds.push(
           rounds.length == 0
             ? dissipationModel.round
@@ -147,6 +162,13 @@ dissipationCanvas = function(p) {
           rounds[rounds.length - 1],
           population.bestNetworkClusters.length
         );
+        if (dissipationModel.clusterHeadDead) {
+          addData(
+            stabilityPeriodChart,
+            rounds[rounds.length - 1],
+            network.nodes.filter(n => n.dead == true).length
+          );
+        }
         addData(
           aliveNodesChart,
           rounds[rounds.length - 1],
@@ -157,6 +179,16 @@ dissipationCanvas = function(p) {
           rounds[rounds.length - 1],
           dissipationModel.packetsSent
         );
+        addData(
+          totalEnergyChart,
+          rounds[rounds.length - 1],
+          network.networkEnergy
+        );
+        // addData(
+        //   totalEnergyChart,
+        //   rounds[rounds.length - 1],
+        //   network.totalRemainingEnergy()
+        // );
         dissipationModel = undefined; // Will be initialized with new clusters next time.
         population = new Population(network, POPULATION_SIZE, true)
           .boot()
@@ -239,3 +271,26 @@ function keyPressed() {
   } else if (key == "f" || key == "F")
     visualizeDissipation = !visualizeDissipation;
 }
+
+$(document).ready(function() {
+  $("#evolvingScreen").click(function() {
+    $(this).text(function(i, v) {
+      evolvingScreen = !evolvingScreen;
+      return v == "Turn On Display" ? "Turn Off Display" : "Turn On Display";
+    });
+  });
+
+  $("#bestNetworkScreen").click(function() {
+    $(this).text(function(i, v) {
+      bestNetworkScreen = !bestNetworkScreen;
+      return v == "Turn On Display" ? "Turn Off Display" : "Turn On Display";
+    });
+  });
+
+  $("#dissipationScreen").click(function() {
+    $(this).text(function(i, v) {
+      dissipationScreen = !dissipationScreen;
+      return v == "Turn On Display" ? "Turn Off Display" : "Turn On Display";
+    });
+  });
+});

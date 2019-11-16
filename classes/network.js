@@ -68,6 +68,23 @@ class Network {
   }
 
   /**
+   * Calculate total energy
+   */
+  totalRemainingEnergy() {
+    let total = 0;
+    total +=
+      this.calculateEnergyFraction(NODE_TYPE.ADV) *
+      this.calcualteNodeFraction(NODE_TYPE.ADV);
+    total +=
+      this.calculateEnergyFraction(NODE_TYPE.INT) *
+      this.calcualteNodeFraction(NODE_TYPE.INT);
+    total +=
+      this.calculateEnergyFraction(NODE_TYPE.NRM) *
+      this.calcualteNodeFraction(NODE_TYPE.NRM);
+    return total;
+  }
+
+  /**
    * Network parameters responsible for network performance are initialized.
    */
   initializeNetworkParameters() {
@@ -98,7 +115,15 @@ class Network {
 
     this.networkEnergy =
       (this.eAdvanced + this.eIntermediate + this.eNormal) * NUMBER_OF_NODES;
-    console.log("Network Energy ET: ", this.networkEnergy);
+    // console.log("Network Energy ET: ", this.networkEnergy);
+    let total = 0;
+    this.nodes.forEach (node => {
+      if (!node.dead) {
+        total += node.energyFactor();
+      }
+    })
+    // console.log("Network Energy", total)
+    this.networkEnergy = total;
     return this;
   }
 

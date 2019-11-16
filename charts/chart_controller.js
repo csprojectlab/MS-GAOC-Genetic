@@ -13,17 +13,49 @@ function setupCharts() {
         "line",
         "# of alive nodes",
         [],
-        aliveNodesDataset
+        aliveNodesDataset,
+        "ALIVE NODES VS ROUNDS",
+        "Rounds",
+        "Nodes"
       );
     };
   }, "alive-nodes-div");
+  /**
+   * Stability Period chart
+   */
+  new p5(p => {
+    p.setup = function() {
+      let c = document
+        .getElementById("stability-period-chart")
+        .getContext("2d");
+      stabilityPeriodChart = createChart(
+        c,
+        "line",
+        "Stability Period",
+        stabilityPeriodDataset,
+        [],
+        "STABILITY PERIOD",
+        "Rounds",
+        "Dead Nodes"
+      );
+    };
+  }, "stability-period-div");
   /**
    * Number of CH chart
    */
   new p5(p => {
     p.setup = function() {
       let c = document.getElementById("ch-count-chart").getContext("2d");
-      chCountChart = createChart(c, "bar", "# of CH", [], chCountDataset);
+      chCountChart = createChart(
+        c,
+        "line",
+        "# of CH",
+        [],
+        chCountDataset,
+        "CLUSTER HEADS VS ROUNDS",
+        "Rounds",
+        "Cluster Heads"
+      );
     };
   }, "ch-count-div");
   /**
@@ -34,16 +66,47 @@ function setupCharts() {
       let c = document.getElementById("packets-to-sink-chart").getContext("2d");
       packetsToSinkChart = createChart(
         c,
-        "horizontalBar",
+        "line",
         "# of packets to sink",
         [],
-        packetsToSinkDataset
+        packetsToSinkDataset,
+        "PACKETS SENT TO BASE STATION",
+        "Rounds",
+        "Number Of Packets"
       );
     };
   }, "packets-to-sink-div");
+  /**
+   * Total energy of the network.
+   */
+  new p5(p => {
+    p.setup = function() {
+      let c = document.getElementById("total-energy-chart").getContext("2d");
+      totalEnergyChart = createChart(
+        c,
+        "line",
+        "Remaining Energy",
+        [],
+        totalEnergyDataset,
+        "NETWORK REMAINING ENERGY",
+        "Rounds",
+        "Remaining Energy"
+      );
+    };
+  }, "total-energy-div");
 }
 
-function createChart(canvas, t, l, labels_array, data_array) {
+function createChart(
+  canvas,
+  t,
+  l,
+  labels_array,
+  data_array,
+  title_text,
+  x_axis_label,
+  y_axis_label,
+  stepped = false
+) {
   var myChart = new Chart(canvas, {
     type: t,
     data: {
@@ -53,29 +116,43 @@ function createChart(canvas, t, l, labels_array, data_array) {
           label: l,
           data: data_array,
           backgroundColor: [
-            // "rgba(255, 99, 132, 0.2)",
-            // "rgba(54, 162, 235, 0.2)",
-            // "rgba(255, 206, 86, 0.2)",
-            // "rgba(75, 192, 192, 0.2)",
-            // "rgba(153, 102, 255, 0.2)",
-            // "rgba(255, 159, 64, 0.2)"
           ],
           borderColor: [
-            // "rgba(255, 99, 132, 1)",
-            // "rgba(54, 162, 235, 1)",
-            // "rgba(255, 206, 86, 1)",
-            // "rgba(75, 192, 192, 1)",
-            // "rgba(153, 102, 255, 1)",
-            // "rgba(255, 159, 64, 1)"
           ],
-          borderWidth: 1
+          borderWidth: 1,
+          steppedLine: stepped
         }
       ]
     },
     options: {
+      title: {
+        display: true,
+        text: title_text,
+        fontSize: 18,
+        fontColor: "#c70d3a"
+      },
+      legends: {
+        display: true
+      },
       scales: {
+        xAxes: [
+          {
+            scaleLabel: {
+              display: true,
+              labelString: x_axis_label,
+              fontColor: "#420000",
+              fontSize: 15
+            }
+          }
+        ],
         yAxes: [
           {
+            scaleLabel: {
+              display: true,
+              labelString: y_axis_label,
+              fontColor: "#420000",
+              fontSize: 15
+            },
             ticks: {
               beginAtZero: true
             }
