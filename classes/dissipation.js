@@ -25,6 +25,10 @@ class EnergyDissipation {
      * variable to stop dissipation.
      */
     this.stopDissipation = false;
+    /**
+     * Counting packets sent to base station. 
+     */
+    this.packetsSent = 0;
     return this;
   }
 
@@ -81,6 +85,7 @@ class EnergyDissipation {
       } else {
         this.transmittingNodes.push([]); // Cluster not selected.
       }
+      this.packetsSent += this.transmittingNodes.length;
     });
     // Check if any cluster is dead => means CH of a cluster is dead.
     // TODO(Aridaman): Add another stopping criteria

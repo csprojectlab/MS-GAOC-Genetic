@@ -8,7 +8,13 @@ function setupCharts() {
   new p5(p => {
     p.setup = function() {
       let c = document.getElementById("alive-nodes-chart").getContext("2d");
-      aliveNodesChart = createChart(c, "line", "# of alive nodes", [], aliveNodesDataset);
+      aliveNodesChart = createChart(
+        c,
+        "line",
+        "# of alive nodes",
+        [],
+        aliveNodesDataset
+      );
     };
   }, "alive-nodes-div");
   /**
@@ -20,6 +26,21 @@ function setupCharts() {
       chCountChart = createChart(c, "bar", "# of CH", [], chCountDataset);
     };
   }, "ch-count-div");
+  /**
+   * Packets to sink chart. Total number of packets in one round.
+   */
+  new p5(p => {
+    p.setup = function() {
+      let c = document.getElementById("packets-to-sink-chart").getContext("2d");
+      packetsToSinkChart = createChart(
+        c,
+        "horizontalBar",
+        "# of packets to sink",
+        [],
+        packetsToSinkDataset
+      );
+    };
+  }, "packets-to-sink-div");
 }
 
 function createChart(canvas, t, l, labels_array, data_array) {
@@ -76,7 +97,7 @@ function addData(chart, label, data) {
       bg = `rgba(${r}, ${g}, ${b}, 0.2)`,
       borderC = `rgba(${r}, ${g}, ${b}, 1)`;
     dataset.backgroundColor.push(bg);
-    dataset.borderColor.push(borderC)
+    dataset.borderColor.push(borderC);
   });
   chart.update();
 }

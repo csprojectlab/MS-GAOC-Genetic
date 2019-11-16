@@ -45,13 +45,15 @@ let evolvingCanvas = null,
  * Charts
  */
 let aliveNodesChart = null,
-  chCountChart = null;
+  chCountChart = null,
+  packetsToSinkChart = null;
 
 /**
  *Charts dataset
  */
 let aliveNodesDataset = [],
-  chCountDataset = [];
+  chCountDataset = [],
+  packetsToSinkDataset = [];
 
 evolvingCanvas = function(p) {
   p.setup = function() {
@@ -132,12 +134,29 @@ dissipationCanvas = function(p) {
       //dissipationModel.dissipateData(p); //.displayEnergyDissipation(p);
       if (dissipationModel.stopDissipation) {
         console.log("Cluster head dead");
-        rounds.push((rounds.length == 0) ? dissipationModel.round : rounds[rounds.length - 1] + dissipationModel.round)
+        rounds.push(
+          rounds.length == 0
+            ? dissipationModel.round
+            : rounds[rounds.length - 1] + dissipationModel.round
+        );
         /**
-         * Update charts. 
+         * Update charts.
          */
-        addData(chCountChart, rounds[rounds.length - 1], population.bestNetworkClusters.length);
-        addData(aliveNodesChart, rounds[rounds.length - 1], network.nodes.filter(n => n.dead == false).length)
+        addData(
+          chCountChart,
+          rounds[rounds.length - 1],
+          population.bestNetworkClusters.length
+        );
+        addData(
+          aliveNodesChart,
+          rounds[rounds.length - 1],
+          network.nodes.filter(n => n.dead == false).length
+        );
+        addData(
+          packetsToSinkChart,
+          rounds[rounds.length - 1],
+          dissipationModel.packetsSent
+        );
         dissipationModel = undefined; // Will be initialized with new clusters next time.
         population = new Population(network, POPULATION_SIZE, true)
           .boot()
