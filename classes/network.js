@@ -32,6 +32,48 @@ class Network {
   }
 
   /**
+   * Set nodes energy. Calculate energy should called before.
+   */
+  setNodesEnergy() {
+    let nodeEnergy;
+    // Energy of each advanced node.
+    nodeEnergy = this.eAdvanced / this.advancedNodes;
+    this.nodes.forEach(node => {
+      if (node.type == NODE_TYPE.ADV) node.setEnergy(nodeEnergy);
+    });
+    // Energy of each intermediate node.
+    nodeEnergy = this.eIntermediate / this.intermediateNodes;
+    this.nodes.forEach(node => {
+      if (node.type == NODE_TYPE.INT) node.setEnergy(nodeEnergy);
+    });
+    // Energy of each normal node.
+    nodeEnergy = this.eNormal / this.normalNodes;
+    this.nodes.forEach(node => {
+      if (node.type == NODE_TYPE.NRM) node.setEnergy(nodeEnergy);
+    });
+    return this;
+  }
+
+  calculateEnergy() {
+    let aliveNodes = this.nodes.filter(node => node.dead == false).length,
+      advNodeFraction = this.calculateNodeFraction(NODE_TYPE.ADV),
+      intNodeFraction = this.calculateNodeFraction(NODE_TYPE.INT);
+    this.eAdvanced =
+      (ENERGY_FRACTION_NORMAL_GAMMA + ENERGY_FRACTION_ADVANCED_ALPHA) * aliveNodes * advNodeFraction;
+    this.eIntermediate =
+      (ENERGY_FRACTION_NORMAL_GAMMA + ENERGY_FRACTION_INTERMEDIATE_BETA) * aliveNodes * intNodeFraction;
+    this.eNormal = (1 - advNodeFraction - intNodeFraction) * aliveNodes * ENERGY_FRACTION_NORMAL_GAMMA;
+    // this.networkEnergy =
+    //   aliveNodes *
+    //   E_INITIAL_ENERGY *
+    //   (1 +
+    //     ENERGY_FRACTION_INTERMEDIATE_BETA * intNodeFraction +
+    //     advNodeFraction * ENERGY_FRACTION_ADVANCED_ALPHA);
+    this.networkEnergy = this.eAdvanced + this.eIntermediate + this.eNormal;
+    return this;
+  }
+
+  /**
    * Function to calculate the energy fraction.
    * Works for all three types of nodes.
    */
@@ -53,35 +95,16 @@ class Network {
   /**
    * Function to calculate the node fraction.
    */
-  calcualteNodeFraction(node_type) {
-    let totalNodes = 0,
-      nodes = 0;
+  calculateNodeFraction(node_type) {
+    let nodes = 0;
     this.nodes.forEach(node => {
       if (!node.dead) {
-        totalNodes += 1;
         if (node.type == node_type) nodes += 1;
       }
     });
-    let x = nodes / totalNodes;
+    let x = nodes / NUMBER_OF_NODES;
     // console.log(x);
     return x;
-  }
-
-  /**
-   * Calculate total energy
-   */
-  totalRemainingEnergy() {
-    let total = 0;
-    total +=
-      this.calculateEnergyFraction(NODE_TYPE.ADV) *
-      this.calcualteNodeFraction(NODE_TYPE.ADV);
-    total +=
-      this.calculateEnergyFraction(NODE_TYPE.INT) *
-      this.calcualteNodeFraction(NODE_TYPE.INT);
-    total +=
-      this.calculateEnergyFraction(NODE_TYPE.NRM) *
-      this.calcualteNodeFraction(NODE_TYPE.NRM);
-    return total;
   }
 
   /**
@@ -96,36 +119,53 @@ class Network {
     this.normalNodes =
       NUMBER_OF_NODES *
       (1 - ADVANCED_NODE_FRACTION - INTERMEDIATE_NODE_FRACTION);
+    this.eAdvanced =
+      (ENERGY_FRACTION_NORMAL_GAMMA + ENERGY_FRACTION_ADVANCED_ALPHA) *
+      NUMBER_OF_NODES *
+      ADVANCED_NODE_FRACTION;
+    this.eIntermediate =
+      (ENERGY_FRACTION_NORMAL_GAMMA + ENERGY_FRACTION_INTERMEDIATE_BETA) *
+      NUMBER_OF_NODES *
+      INTERMEDIATE_NODE_FRACTION;
+    this.eNormal =
+      (1 - ADVANCED_NODE_FRACTION - INTERMEDIATE_NODE_FRACTION) *
+      NUMBER_OF_NODES * ENERGY_FRACTION_NORMAL_GAMMA;
+    // this.networkEnergy =
+    //   E_INITIAL_ENERGY *
+    //   (1 +
+    //     ENERGY_FRACTION_INTERMEDIATE_BETA * INTERMEDIATE_NODE_FRACTION +
+    //     ADVANCED_NODE_FRACTION * ENERGY_FRACTION_ADVANCED_ALPHA);
+    this.networkEnergy = this.eAdvanced + this.eIntermediate + this.eNormal;
     return this;
   }
 
   /**
    * Initialize the energy parameters.
    */
-  calculateEnergy() {
-    this.eAdvanced =
-      (1 + this.calculateEnergyFraction(NODE_TYPE.ADV)) *
-      this.calcualteNodeFraction(NODE_TYPE.ADV);
-    this.eIntermediate =
-      (1 + this.calculateEnergyFraction(NODE_TYPE.INT)) *
-      this.calcualteNodeFraction(NODE_TYPE.INT);
-    this.eNormal =
-      (1 + this.calculateEnergyFraction(NODE_TYPE.NRM)) *
-      this.calcualteNodeFraction(NODE_TYPE.NRM);
+  // calculateEnergy() {
+  //   this.eAdvanced =
+  //     (1 + this.calculateEnergyFraction(NODE_TYPE.ADV)) *
+  //     this.calcualteNodeFraction(NODE_TYPE.ADV);
+  //   this.eIntermediate =
+  //     (1 + this.calculateEnergyFraction(NODE_TYPE.INT)) *
+  //     this.calcualteNodeFraction(NODE_TYPE.INT);
+  //   this.eNormal =
+  //     (1 + this.calculateEnergyFraction(NODE_TYPE.NRM)) *
+  //     this.calcualteNodeFraction(NODE_TYPE.NRM);
 
-    this.networkEnergy =
-      (this.eAdvanced + this.eIntermediate + this.eNormal) * NUMBER_OF_NODES;
-    // console.log("Network Energy ET: ", this.networkEnergy);
-    let total = 0;
-    this.nodes.forEach (node => {
-      if (!node.dead) {
-        total += node.energyFactor();
-      }
-    })
-    // console.log("Network Energy", total)
-    this.networkEnergy = total;
-    return this;
-  }
+  //   this.networkEnergy =
+  //     (this.eAdvanced + this.eIntermediate + this.eNormal) * NUMBER_OF_NODES;
+  //   // console.log("Network Energy ET: ", this.networkEnergy);
+  //   let total = 0;
+  //   this.nodes.forEach(node => {
+  //     if (!node.dead) {
+  //       total += node.energyFactor();
+  //     }
+  //   });
+  //   // console.log("Network Energy", total)
+  //   this.networkEnergy = total;
+  //   return this;
+  // }
 
   /**
    * Generating the number of nodes.

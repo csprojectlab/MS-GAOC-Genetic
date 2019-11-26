@@ -60,7 +60,7 @@ let aliveNodesDataset = [],
   stabilityPeriodDataset = [];
 
 var selectionProb = 0.05,
-  thresholding = 0.015;
+  thresholding = 0.005;
 
 /**
  * Screen displaying
@@ -107,8 +107,7 @@ bestNetworkCanvas = function(p) {
     p.rect(0, 0, CWIDTH, CHEIGHT);
     displayNetworkBorder(p);
     if (population.bestNetworkClusters.length > 0) {
-      if (bestNetworkScreen)
-        population.display(p)
+      if (bestNetworkScreen) population.display(p);
     }
   };
 };
@@ -147,8 +146,8 @@ dissipationCanvas = function(p) {
       }
       //dissipationModel.dissipateData(p); //.displayEnergyDissipation(p);
       if (dissipationModel.stopDissipation) {
-        thresholding += 0.05;
-        if (thresholding >= 0.9) thresholding = 0.8;
+        // thresholding += 0.05;
+        // if (thresholding >= 0.9) thresholding = 0.8;
         rounds.push(
           rounds.length == 0
             ? dissipationModel.round
@@ -217,19 +216,24 @@ function setup() {
   network = new Network()
     .initializeNetworkParameters()
     .generateHeterogenousNodes()
-    .calculateEnergy()
     .generateSinks()
+    .calculateEnergy()
+    .setNodesEnergy()
     .calculateDistanceBetweenNodes()
     .calculateDistanceBetweenNodeAndSink();
   population = new Population(network, POPULATION_SIZE, true)
     .boot()
     .generateChromosomePopulation();
 
-  evolvingP5Canvas = new p5(evolvingCanvas, "evolution-canvas");
-  bestNetworkP5Canvas = new p5(bestNetworkCanvas, "best-network-canvas");
-  dissipationP5Canvas = new p5(dissipationCanvas, "dissipation-canvas");
-  dissipationP5Canvas.noLoop();
-  setupCharts();
+  // evolvingP5Canvas = new p5(evolvingCanvas, "evolution-canvas");
+  // bestNetworkP5Canvas = new p5(bestNetworkCanvas, "best-network-canvas");
+  // dissipationP5Canvas = new p5(dissipationCanvas, "dissipation-canvas");
+  // dissipationP5Canvas.noLoop();
+  // Additional
+  // evolvingP5Canvas.noLoop();
+  // bestNetworkP5Canvas.noLoop();
+  // setupCharts();
+  fast();
 }
 
 /**
@@ -294,3 +298,51 @@ $(document).ready(function() {
     });
   });
 });
+
+let r = 0;
+function fast() {
+  let j = network.nodes.filter(n => n.dead == false).length,
+  r = 0;
+  generationCount = 0;
+  while (j > 0) {
+    if (evolving) {
+      generationCount++;
+      if (generationCount == GENERATIONS) {
+        evolving = false;
+        generationCount = 0;
+      }
+      population
+      .fittest()
+      .generateClusters()
+      .evolve();
+      // console.log("Evolving")
+    }
+     
+    else {
+      // console.log("Dissipating")
+      if (dissipationModel == undefined) {
+        network.calculateEnergy();
+        dissipationModel = new EnergyDissipation(network)
+          .addClusters(population.bestNetworkClusters)
+          .setThreshold(thresholding * network.networkEnergy);
+        thresholding += 0.005;
+        if (thresholding >= 0.5)
+          thresholding = 0.5
+      }
+
+      dissipationModel.dissipateData(); // Without Visualization.
+      if (dissipationModel.stopDissipation) {
+        r += dissipationModel.round;
+        console.log(r, network.networkEnergy);
+        dissipationModel = undefined; // Will be initialized with new clusters next time.
+        population = new Population(network, POPULATION_SIZE, true)
+          .boot()
+          .generateChromosomePopulation();
+        evolving = true; // Start evolving the structure again.
+      }
+    }
+    j = network.nodes.filter(n => n.dead == false).length;
+    // console.log(j);
+  }
+  console.log("Done");
+}

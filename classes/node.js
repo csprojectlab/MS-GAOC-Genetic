@@ -5,19 +5,18 @@ class Node {
   constructor(x, y, type) {
     this.position = createVector(x, y);
     this.type = type;
-    switch (type) {
-      case NODE_TYPE.ADV:
-        this.eMax = 10;
-        break;
-      case NODE_TYPE.INT:
-        this.eMax = 5;
-        break;
-      case NODE_TYPE.NRM:
-        this.eMax = 3;
-        break;
-    }
-    this.residualEnergy = this.eMax;
+    this.eMax = 0;
+    this.residualEnergy = 0;
     this.dead = false;
+  }
+
+  /**
+   * Set energy of node.
+   */
+  setEnergy(energy) {
+    this.eMax = energy;
+    this.residualEnergy = energy;
+    return this;
   }
 
   /**
